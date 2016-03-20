@@ -22,7 +22,7 @@ class TypeBasedOpenList : public OpenList<Entry> {
     vector<ScalarEvaluator *> evaluators;
 
     using Key = vector<int>;
-    using Bucket = vector<Entry>;
+    using Bucket = deque<Entry>;
     vector<pair<Key, Bucket>> keys_and_buckets;
     unordered_map<Key, int> key_to_bucket_index;
 
@@ -66,7 +66,8 @@ void TypeBasedOpenList<Entry>::do_insertion(
 
 template<class Entry>
 TypeBasedOpenList<Entry>::TypeBasedOpenList(const Options &opts)
-    : evaluators(opts.get_list<ScalarEvaluator *>("evaluators")) {
+    : OpenList<Entry>(false,QueueType(opts.get_enum("queue_type"))),
+      evaluators(opts.get_list<ScalarEvaluator *>("evaluators")) {
 }
 
 template<class Entry>
@@ -81,8 +82,7 @@ Entry TypeBasedOpenList<Entry>::remove_min(vector<int> *key) {
         *key = min_key;
     }
 
-    int pos = g_rng(bucket.size());
-    Entry result = Utils::swap_and_pop_from_vector(bucket, pos);
+    Entry result = pop_bucket<Entry,Bucket>(bucket, this->queue_type);
 
     if (bucket.empty()) {
         // Swap the empty bucket with the last bucket, then delete it.
@@ -173,6 +173,7 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "evaluators",
         "Evaluators used to determine the bucket for each entry.");
 
+    add_queue_type_option_to_parser(parser,"RANDOM");
     Options opts = parser.parse();
     opts.verify_list_non_empty<ScalarEvaluator *>("evaluators");
     if (parser.dry_run())
