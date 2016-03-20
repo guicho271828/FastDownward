@@ -58,7 +58,7 @@ public:
 
 template<class Entry>
 ParetoOpenList<Entry>::ParetoOpenList(const Options &opts)
-    : OpenList<Entry>(opts.get<bool>("pref_only")),
+    : OpenList<Entry>(opts.get<bool>("pref_only"),QueueType(opts.get_enum("queue_type"))),
       state_uniform_selection(opts.get<bool>("state_uniform_selection")),
       evaluators(opts.get_list<ScalarEvaluator *>("evals")) {
 }
@@ -173,8 +173,7 @@ Entry ParetoOpenList<Entry>::remove_min(vector<int> *key) {
     }
 
     Bucket &bucket = buckets[*selected];
-    Entry result = bucket.front();
-    bucket.pop_front();
+    Entry result = pop_bucket<Entry,Bucket>(bucket, this->queue_type);
     if (bucket.empty())
         remove_key(*selected);
     return result;
@@ -254,6 +253,7 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "we weight the buckets with the number of entries.",
         "false");
 
+    add_queue_type_option_to_parser(parser);
     Options opts = parser.parse();
     if (parser.dry_run())
         return nullptr;
