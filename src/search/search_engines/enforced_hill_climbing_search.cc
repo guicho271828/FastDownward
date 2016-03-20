@@ -43,6 +43,7 @@ static shared_ptr<OpenListFactory> create_ehc_open_list_factory(
         Options options;
         options.set("eval", g_evaluator);
         options.set("pref_only", false);
+        options.set("queue_type", static_cast<int>(FIFO));
         return make_shared<StandardScalarOpenListFactory>(options);
     } else {
         /*
@@ -57,6 +58,7 @@ static shared_ptr<OpenListFactory> create_ehc_open_list_factory(
         Options options;
         options.set("evals", evals);
         options.set("pref_only", false);
+        options.set("queue_type", static_cast<int>(FIFO));
         options.set("unsafe_pruning", true);
         return make_shared<TieBreakingOpenListFactory>(options);
     }
