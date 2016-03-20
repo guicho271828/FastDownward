@@ -169,6 +169,31 @@ bool OpenList<Entry>::only_contains_preferred_entries() const {
 
 void add_queue_type_option_to_parser(OptionParser &parser, std::string def_type = "FIFO");
 
-
+template<class Entry, class Container>
+Entry& pop_bucket(Container &bucket, const QueueType &queue_type){
+    switch (queue_type){
+    case LIFO:
+    {
+        Entry &result = bucket.back();
+        bucket.pop_back();
+        return result;
+    }
+    case RANDOM:{
+        int i = g_rng(bucket.size());
+        auto it = bucket.begin()+i;
+        Entry &result = *it;
+        *it = bucket.back();
+        bucket.pop_back();
+        return result;
+    }
+    case FIFO:
+    default:
+    {
+        Entry &result = bucket.front();
+        bucket.pop_front();
+        return result;
+    }
+    }
+}
 
 #endif
