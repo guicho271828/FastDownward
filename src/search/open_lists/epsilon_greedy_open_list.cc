@@ -1,4 +1,5 @@
 #include "epsilon_greedy_open_list.h"
+#include "tiebreaking_open_list.h"
 
 #include "open_list.h"
 
@@ -12,127 +13,57 @@
 
 #include <functional>
 #include <memory>
+#include <deque>
 
 using namespace std;
 
 
 template<class Entry>
-class EpsilonGreedyOpenList : public OpenList<Entry> {
-    struct HeapNode {
-        int id;
-        int h;
-        Entry entry;
-        HeapNode(int id, int h, const Entry &entry)
-            : id(id), h(h), entry(entry) {
-        }
-
-        bool operator>(const HeapNode &other) const {
-            return make_pair(h, id) > make_pair(other.h, other.id);
-        }
-    };
-
-    vector<HeapNode> heap;
-    ScalarEvaluator *evaluator;
-
+class EpsilonGreedyOpenList : public TieBreakingOpenList<Entry> {
     double epsilon;
-    int size;
-    int next_id;
-
-protected:
-    virtual void do_insertion(EvaluationContext &eval_context,
-                              const Entry &entry) override;
+    bool h_bias;
 
 public:
     explicit EpsilonGreedyOpenList(const Options &opts);
     virtual ~EpsilonGreedyOpenList() override = default;
 
-    virtual Entry remove_min(vector<int> *key = nullptr) override;
-    virtual bool is_dead_end(
-        EvaluationContext &eval_context) const override;
-    virtual bool is_reliable_dead_end(
-        EvaluationContext &eval_context) const override;
-    virtual void get_involved_heuristics(set<Heuristic *> &hset) override;
-    virtual bool empty() const override;
-    virtual void clear() override;
+    virtual typename Buckets<Entry>::iterator get_bucket(std::vector<int> *key) override;
 };
-
-template<class HeapNode>
-static void adjust_heap_up(vector<HeapNode> &heap, size_t pos) {
-    assert(Utils::in_bounds(pos, heap));
-    while (pos != 0) {
-        size_t parent_pos = (pos - 1) / 2;
-        if (heap[pos] > heap[parent_pos]) {
-            break;
-        }
-        swap(heap[pos], heap[parent_pos]);
-        pos = parent_pos;
-    }
-}
-
-template<class Entry>
-void EpsilonGreedyOpenList<Entry>::do_insertion(
-    EvaluationContext &eval_context, const Entry &entry) {
-    heap.emplace_back(
-        next_id++, eval_context.get_heuristic_value(evaluator), entry);
-    push_heap(heap.begin(), heap.end(), greater<HeapNode>());
-    ++size;
-}
 
 template<class Entry>
 EpsilonGreedyOpenList<Entry>::EpsilonGreedyOpenList(const Options &opts)
-    : OpenList<Entry>(opts.get<bool>("pref_only")),
-      evaluator(opts.get<ScalarEvaluator *>("eval")),
+    : TieBreakingOpenList<Entry>(opts),
       epsilon(opts.get<double>("epsilon")),
-      size(0),
-      next_id(0) {
+      h_bias(opts.get<bool>("h_bias")) {
 }
 
 template<class Entry>
-Entry EpsilonGreedyOpenList<Entry>::remove_min(vector<int> *key) {
-    assert(size > 0);
+typename Buckets<Entry>::iterator EpsilonGreedyOpenList<Entry>::get_bucket(vector<int> *key) {
+    auto &buckets = this->buckets;
+    auto &size = this->size;
+    auto it = buckets.begin();
+    assert(it != buckets.end());
     if (g_rng() < epsilon) {
-        int pos = g_rng(size);
-        heap[pos].h = numeric_limits<int>::min();
-        adjust_heap_up(heap, pos);
+        if (h_bias){
+            int pos = g_rng(buckets.size());
+            for (int i = 0; i < pos; i++){
+                it++;
+            }
+        } else {
+            int pos = g_rng(size);
+            int tmp_size = 0;
+            while (tmp_size < pos){
+                it++;
+                tmp_size += it->second.size();
+            }
+        }
     }
-    pop_heap(heap.begin(), heap.end(), greater<HeapNode>());
-    HeapNode heap_node = heap.back();
-    heap.pop_back();
+    assert(!it->second.empty());
     if (key) {
         assert(key->empty());
-        key->push_back(heap_node.h);
+        *key = it->first;
     }
-    --size;
-    return heap_node.entry;
-}
-
-template<class Entry>
-bool EpsilonGreedyOpenList<Entry>::is_dead_end(
-    EvaluationContext &eval_context) const {
-    return eval_context.is_heuristic_infinite(evaluator);
-}
-
-template<class Entry>
-bool EpsilonGreedyOpenList<Entry>::is_reliable_dead_end(
-    EvaluationContext &eval_context) const {
-    return is_dead_end(eval_context) && evaluator->dead_ends_are_reliable();
-}
-
-template<class Entry>
-void EpsilonGreedyOpenList<Entry>::get_involved_heuristics(set<Heuristic *> &hset) {
-    evaluator->get_involved_heuristics(hset);
-}
-
-template<class Entry>
-bool EpsilonGreedyOpenList<Entry>::empty() const {
-    return size == 0;
-}
-
-template<class Entry>
-void EpsilonGreedyOpenList<Entry>::clear() {
-    heap.clear();
-    size = 0;
-    next_id = 0;
+    return it;
 }
 
 EpsilonGreedyOpenListFactory::EpsilonGreedyOpenListFactory(
@@ -165,7 +96,7 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "In //Proceedings of the Twenty-Fourth International "
         "Conference on Automated Planning and Scheduling (ICAPS "
         "2014)//, pp. 375-379. AAAI Press 2014.\n\n\n");
-    parser.add_option<ScalarEvaluator *>("eval", "scalar evaluator");
+    parser.add_list_option<ScalarEvaluator *>("evals", "scalar evaluators");
     parser.add_option<bool>(
         "pref_only",
         "insert only nodes generated by preferred operators", "false");
@@ -174,6 +105,15 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "probability for choosing the next entry randomly",
         "0.2",
         Bounds("0.0", "1.0"));
+    parser.add_option<bool>(
+        "h_bias",
+        "Randomize over buckets, rather than over all OPEN", "true");
+    parser.add_option<bool>(
+        "unsafe_pruning",
+        "allow unsafe pruning when the main evaluator regards a state a dead end",
+        "true");
+
+    add_queue_type_option_to_parser(parser);
 
     Options opts = parser.parse();
     if (parser.dry_run()) {
