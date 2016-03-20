@@ -26,6 +26,7 @@ shared_ptr<OpenListFactory> create_standard_scalar_open_list_factory(
     Options options;
     options.set("eval", eval);
     options.set("pref_only", pref_only);
+    options.set("queue_type", static_cast<int>(FIFO));
     return make_shared<StandardScalarOpenListFactory>(options);
 }
 
@@ -122,6 +123,7 @@ create_astar_open_list_factory_and_f_eval(const Options &opts) {
     options.set("evals", evals);
     options.set("pref_only", false);
     options.set("unsafe_pruning", false);
+    options.set("queue_type", static_cast<int>(FIFO));
     shared_ptr<OpenListFactory> open =
         make_shared<TieBreakingOpenListFactory>(options);
     return make_pair(open, f);

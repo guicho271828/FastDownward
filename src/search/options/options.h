@@ -43,7 +43,7 @@ public:
         } catch (const BadAnyCast &) {
             std::cout << "Invalid conversion while retrieving config options!"
                       << std::endl
-                      << key << " is not of type " << TypeNamer<T>::name()
+                      << "For key "<< key << ", stored value is not of type " << TypeNamer<T>::name()
                       << std::endl << "exiting" << std::endl;
             Utils::exit_with(Utils::ExitCode::CRITICAL_ERROR);
         }
