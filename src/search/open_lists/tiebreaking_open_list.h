@@ -1,3 +1,4 @@
+/* -*- mode : c++ -*- */
 #ifndef OPEN_LISTS_TIEBREAKING_OPEN_LIST_H
 #define OPEN_LISTS_TIEBREAKING_OPEN_LIST_H
 
@@ -10,9 +11,13 @@
 #include <vector>
 
 template<class Entry>
-class TieBreakingOpenList : public OpenList<Entry> {
-    using Bucket = std::deque<Entry>;
+using Bucket = std::deque<Entry>;
 
+template<class Entry>
+using Buckets = std::map<const std::vector<int>, Bucket<Entry>>;
+
+template<class Entry>
+class TieBreakingOpenList : public OpenList<Entry> {
 
     std::vector<ScalarEvaluator *> evaluators;
     /*
@@ -25,7 +30,7 @@ class TieBreakingOpenList : public OpenList<Entry> {
     int dimension() const;
 
 protected:
-    std::map<const std::vector<int>, Bucket> buckets;
+    Buckets<Entry> buckets;
     int size;
     virtual void do_insertion(EvaluationContext &eval_context,
                               const Entry &entry) override;
@@ -41,6 +46,7 @@ public:
         EvaluationContext &eval_context) const override;
     virtual bool is_reliable_dead_end(
         EvaluationContext &eval_context) const override;
+    virtual typename Buckets<Entry>::iterator get_bucket(std::vector<int> *key);
 };
 
 
