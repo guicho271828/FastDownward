@@ -146,6 +146,13 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+    NAME DEPTH_EVALUATOR
+    HELP "The depth-evaluator"
+    SOURCES
+        evaluators/depth_evaluator.cc
+)
+
+fast_downward_plugin(
     NAME COMBINING_EVALUATOR
     HELP "The combining evaluator"
     SOURCES
