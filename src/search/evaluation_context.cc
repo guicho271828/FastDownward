@@ -54,6 +54,10 @@ const GlobalState &EvaluationContext::get_state() const {
     return cache.get_state();
 }
 
+SearchSpace* EvaluationContext::get_space() const {
+    return space;
+}
+
 int EvaluationContext::get_g_value() const {
     assert(g_value != INVALID);
     return g_value;
