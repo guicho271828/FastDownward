@@ -1,0 +1,9 @@
+*~
+#*
+*.pyc
+builds/
+*TAGS
+/output
+/output.sas
+/sas_plan.1
+/sas_plan.2
