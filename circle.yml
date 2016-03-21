@@ -1,0 +1,17 @@
+machine:
+  environment:
+
+dependencies:
+  pre:
+    - sudo apt-get install -qq -y g++ make python flex bison cmake g++-multilib python-pip
+    - sudo pip install pytest
+  cache_directories:
+    - builds/
+
+test:
+  override:
+    # - ./misc/style/run-all-style-checks.py
+    - ./build.py
+    - ./build.py --debug
+    - ./misc/tests/run-all-code-tests
+
