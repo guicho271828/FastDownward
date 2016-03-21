@@ -71,7 +71,7 @@ EnforcedHillClimbingSearch::EnforcedHillClimbingSearch(
       heuristic(opts.get<Heuristic *>("h")),
       preferred_operator_heuristics(opts.get_list<Heuristic *>("preferred")),
       preferred_usage(PreferredUsage(opts.get_enum("preferred_usage"))),
-      current_eval_context(g_initial_state(), &statistics),
+      current_eval_context(g_initial_state(), &statistics, &search_space),
       current_phase_start_g(-1),
       num_ehc_phases(0),
       last_num_expanded(-1) {
@@ -168,7 +168,7 @@ void EnforcedHillClimbingSearch::expand(EvaluationContext &eval_context) {
         EdgeOpenListEntry entry = make_pair(
             eval_context.get_state().get_id(), op);
         EvaluationContext new_eval_context(
-            eval_context.get_cache(), succ_g, op->is_marked(), &statistics);
+            eval_context.get_cache(), succ_g, op->is_marked(), &statistics, &search_space);
         open_list->insert(new_eval_context, entry);
         op->unmark();
     }
@@ -210,7 +210,7 @@ SearchStatus EnforcedHillClimbingSearch::ehc() {
         SearchNode node = search_space.get_node(state);
 
         if (node.is_new()) {
-            EvaluationContext eval_context(state, &statistics);
+            EvaluationContext eval_context(state, &statistics, &search_space);
             reach_state(parent_state, *last_op, state);
             statistics.inc_evaluated_states();
 

@@ -60,7 +60,7 @@ void EagerSearch::initialize() {
     const GlobalState &initial_state = g_initial_state();
     // Note: we consider the initial state as reached by a preferred
     // operator.
-    EvaluationContext eval_context(initial_state, 0, true, &statistics);
+    EvaluationContext eval_context(initial_state, 0, true, &statistics, &search_space);
 
     statistics.inc_evaluated_states();
 
@@ -106,7 +106,7 @@ SearchStatus EagerSearch::step() {
 
     g_successor_generator->generate_applicable_ops(s, applicable_ops);
     // This evaluates the expanded state (again) to get preferred ops
-    EvaluationContext eval_context(s, node.get_g(), false, &statistics, true);
+    EvaluationContext eval_context(s, node.get_g(), false, &statistics, &search_space, true);
     for (Heuristic *heur : preferred_operator_heuristics) {
         /* In an alternation search with unreliable heuristics, it is
            possible that this heuristic considers the state a dead
@@ -154,7 +154,7 @@ SearchStatus EagerSearch::step() {
             int succ_g = node.get_g() + get_adjusted_cost(*op);
 
             EvaluationContext eval_context(
-                succ_state, succ_g, is_preferred, &statistics);
+                succ_state, succ_g, is_preferred, &statistics, &search_space);
             statistics.inc_evaluated_states();
 
             if (open_list->is_dead_end(eval_context)) {
@@ -185,7 +185,7 @@ SearchStatus EagerSearch::step() {
                 succ_node.reopen(node, op);
 
                 EvaluationContext eval_context(
-                    succ_state, succ_node.get_g(), is_preferred, &statistics);
+                    succ_state, succ_node.get_g(), is_preferred, &statistics, &search_space);
 
                 /*
                   Note: our old code used to retrieve the h value from
@@ -254,7 +254,7 @@ pair<SearchNode, bool> EagerSearch::fetch_next_node() {
 
             if (!node.is_closed()) {
                 EvaluationContext eval_context(
-                    node.get_state(), node.get_g(), false, &statistics);
+                    node.get_state(), node.get_g(), false, &statistics, &search_space);
 
                 if (open_list->is_dead_end(eval_context)) {
                     node.mark_as_dead_end();
@@ -302,7 +302,7 @@ void EagerSearch::update_f_value_statistics(const SearchNode &node) {
           TODO: This code doesn't fit the idea of supporting
           an arbitrary f evaluator.
         */
-        EvaluationContext eval_context(node.get_state(), node.get_g(), false, &statistics);
+        EvaluationContext eval_context(node.get_state(), node.get_g(), false, &statistics, &search_space);
         int f_value = eval_context.get_heuristic_value(f_evaluator);
         statistics.report_f_value_progress(f_value);
     }

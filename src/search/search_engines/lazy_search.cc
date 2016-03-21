@@ -34,7 +34,7 @@ LazySearch::LazySearch(const Options &opts)
       current_operator(nullptr),
       current_g(0),
       current_real_g(0),
-      current_eval_context(current_state, 0, true, &statistics) {
+      current_eval_context(current_state, 0, true, &statistics, &search_space) {
     /*
       We initialize current_eval_context in such a way that the initial node
       counts as "preferred".
@@ -119,7 +119,7 @@ void LazySearch::generate_successors() {
             op->unmark();
         if (new_real_g < bound) {
             EvaluationContext new_eval_context(
-                current_eval_context.get_cache(), new_g, is_preferred, nullptr);
+                current_eval_context.get_cache(), new_g, is_preferred, nullptr, nullptr);
             open_list->insert(new_eval_context, make_pair(current_state.get_id(), op));
         }
     }
@@ -151,7 +151,7 @@ SearchStatus LazySearch::fetch_next_state() {
       associate with the expanded vs. evaluated nodes in lazy search
       and where to obtain it from.
     */
-    current_eval_context = EvaluationContext(current_state, current_g, true, &statistics);
+    current_eval_context = EvaluationContext(current_state, current_g, true, &statistics, &search_space);
 
     return IN_PROGRESS;
 }
