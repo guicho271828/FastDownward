@@ -139,6 +139,11 @@ def configs_optimal_extended():
             "--heuristic", "h=lmcut()",
             "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=LIFO), reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
+        "typed_tiebreaking_lmcut_RandomDepth_RandomOrder": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(typed_tiebreaking([sum([g(), h]), h],[depth([sum([g(), h]), h])],queue_type=RANDOM),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
     }
 
 
@@ -245,6 +250,12 @@ def configs_satisficing_extended():
         "type_based_ff_LIFO": [
             "--heuristic", "h=ff()",
             "--search", "eager(type_based([g(), h],queue_type=LIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # simulate typebased with typed_tiebreaking
+        "typed_tiebreaking_ff_simulate_typebased": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(typed_tiebreaking([],[g(),h],queue_type=RANDOM),"
+            " reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
     }
 
