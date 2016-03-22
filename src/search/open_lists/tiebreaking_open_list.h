@@ -19,7 +19,6 @@ using Buckets = std::map<const std::vector<int>, Bucket<Entry>>;
 template<class Entry>
 class TieBreakingOpenList : public OpenList<Entry> {
 
-    std::vector<ScalarEvaluator *> evaluators;
     /*
       If allow_unsafe_pruning is true, we ignore (don't insert) states
       which the first evaluator considers a dead end, even if it is
@@ -30,6 +29,7 @@ class TieBreakingOpenList : public OpenList<Entry> {
     int dimension() const;
 
 protected:
+    std::vector<ScalarEvaluator *> evaluators;
     Buckets<Entry> buckets;
     int size;
     virtual void do_insertion(EvaluationContext &eval_context,

@@ -18,8 +18,8 @@ using namespace std;
 template<class Entry>
 TieBreakingOpenList<Entry>::TieBreakingOpenList(const Options &opts)
     : OpenList<Entry>(opts.get<bool>("pref_only"),QueueType(opts.get_enum("queue_type"))),
-      evaluators(opts.get_list<ScalarEvaluator *>("evals")),
       allow_unsafe_pruning(opts.get<bool>("unsafe_pruning")),
+      evaluators(opts.get_list<ScalarEvaluator *>("evals")),
       size(0) {
 }
 
