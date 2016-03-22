@@ -189,7 +189,22 @@ def configs_satisficing_extended():
             "--heuristic",
             "h=lmcut()",
             "--search",
-            "eager(single_buckets(h), reopen_closed=true)"],
+            "eager(single_buckets(h), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # epsilon-greedy
+        "egreedy_ff": [
+            "--heuristic",
+            "h=ff()",
+            "--search",
+            "eager(epsilon_greedy([h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # typebased
+        "typebased_ff": [
+            "--heuristic",
+            "h=ff()",
+            "--search",
+            "eager(type_based([g(),h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
     }
 
 
