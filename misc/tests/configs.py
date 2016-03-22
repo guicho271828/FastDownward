@@ -122,6 +122,23 @@ def configs_optimal_extended():
         "astar_lmcount_lm_merged_rhw_hm_no_order": [
             "--search",
             "astar(lmcount(lm_merged([lm_rhw(),lm_hm(m=1)]),admissible=true),mpd=true)"],
+        # different last-resort
+        "tiebreaking_lmcut": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_FIFO": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=FIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_RANDOM": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=RANDOM), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_LIFO": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=LIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
     }
 
 
