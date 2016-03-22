@@ -21,6 +21,9 @@ public:
     void set_help_mode(bool hm) {
         help_mode = hm;
     }
+    bool is_help_mode(){
+        return help_mode;
+    }
 
     std::map<std::string, Any> storage;
 

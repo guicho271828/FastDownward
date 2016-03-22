@@ -7,12 +7,14 @@
 
 #include "../utils/rng.h"
 #include "../utils/memory.h"
+#include "../utils/system.h"
 
 #include <cassert>
 #include <deque>
 #include <map>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -100,7 +102,14 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "allow unsafe pruning when the main evaluator regards a state a dead end",
         "true");
     Options opts = parser.parse();
-    opts.verify_list_non_empty<ScalarEvaluator *>("evals");
+    // opts.verify_list_non_empty<ScalarEvaluator *>("evals");
+    auto evals = opts.get<std::vector<ScalarEvaluator *>>("evals");
+    auto type_evals = opts.get<std::vector<ScalarEvaluator *>>("type_evals");
+    if (!opts.is_help_mode() && evals.empty() && type_evals.empty()){
+        std::cout << "Error: unexpected empty list!" << std::endl
+                  << "Both evals and type_evals are empty" << std::endl;
+        Utils::exit_with(Utils::ExitCode::INPUT_ERROR);
+    }
     if (parser.dry_run())
         return nullptr;
     else
