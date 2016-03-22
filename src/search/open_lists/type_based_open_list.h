@@ -23,6 +23,16 @@
                             Original    Code below
     Insert entry            O(log(m))   O(1)
     Remove entry            O(m)        O(1)        # both use swap+pop
+
+  Comment from Masataro Asai:
+
+  original : map (key, deque)
+  above    : uomap (key, int) + vector(key, vector)
+  now      : uomap (key, int) + vector(key, deque )
+
+  changed vector -> deque in order to support FIFO/LIFO/RANDOM(swap+pop).
+  This does not change the time complexity.
+
 */
 
 class TypeBasedOpenListFactory : public OpenListFactory {
