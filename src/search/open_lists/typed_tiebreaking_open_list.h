@@ -21,21 +21,34 @@ class index_access_unordered_map {
 public:
     index_access_unordered_map(){}
     V & operator[](const K &key) {
-        auto &result = at_index(key_to_index[key]);
+        int index;
+        try{
+            index = key_to_index.at(key);
+        } catch (const std::out_of_range& c) {
+            index = storage.size();
+            key_to_index[key] = index;
+        }
+        auto &result = at_index(index);
         result.first = key;
         return result.second;
     }
     void erase(const K &key) {
-        int index = key_to_index[key];
-        key_to_index.erase(key);
-        Utils::swap_and_pop_from_vector(storage, index);
+        try{
+            int index = key_to_index.at(key);
+            key_to_index.erase(key);
+            Utils::swap_and_pop_from_vector(storage, index);
+        } catch (const std::out_of_range& c) {}
     }
     void erase(typename Storage::iterator it) {
         erase(it->first);
     }
     typename Storage::value_type &at_index(const int &index) {
-        storage.reserve(index);
-        return storage[index];
+        try{
+            return storage.at(index);
+        } catch (const std::out_of_range& c) {
+            storage.resize(index+1);
+            return storage[index];
+        }
     }
     typename Storage::value_type &at_random(){
         return at_index(g_rng(storage.size()));
@@ -66,8 +79,7 @@ class TypedTiebreakingOpenList : public TieBreakingOpenList<Entry> {
 
 public:
     typedef std::vector<int> Key;
-    typedef std::deque<Entry> Bucket;
-    typedef index_access_unordered_map<Key, Bucket> TypeBuckets;
+    typedef index_access_unordered_map<Key, Bucket<Entry>> TypeBuckets;
 private:
     std::vector<ScalarEvaluator *> type_evaluators;
 
@@ -80,6 +92,9 @@ public:
     virtual ~TypedTiebreakingOpenList() override = default;
 
     virtual Entry remove_min(std::vector<int> *key = nullptr) override;
+    virtual bool is_dead_end(
+        EvaluationContext &eval_context) const override;
+
 };
 
     

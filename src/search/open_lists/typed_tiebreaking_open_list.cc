@@ -27,15 +27,14 @@ TypedTiebreakingOpenList<Entry>::TypedTiebreakingOpenList(const Options &opts)
 template<class Entry>
 void TypedTiebreakingOpenList<Entry>::do_insertion(
     EvaluationContext &eval_context, const Entry &entry) {
-    vector<int> key;
+    Key key;
     key.reserve(this->evaluators.size());
     for (ScalarEvaluator *evaluator : this->evaluators)
         key.push_back(eval_context.get_heuristic_value_or_infinity(evaluator));
-    vector<int> type_key;
+    Key type_key;
     type_key.reserve(type_evaluators.size());
     for (ScalarEvaluator *evaluator : type_evaluators)
         type_key.push_back(eval_context.get_heuristic_value_or_infinity(evaluator));
-    
     auto &tbuckets = buckets[key];
     auto &tbucket = tbuckets[type_key];
     tbucket.push_back(entry);
@@ -58,17 +57,27 @@ Entry TypedTiebreakingOpenList<Entry>::remove_min(vector<int> *key) {
     auto it2 = tbuckets.iter_random();
     auto &tbucket = it2->second;
     
-    Entry result = pop_bucket<Entry,Bucket>(tbucket, this->queue_type);
+    Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
     if (tbucket.empty()){
         tbuckets.erase(it2);
     }
     if (tbuckets.empty()){
         buckets.erase(it);
     }
-    
     return result;
 }
 
+template<class Entry>
+bool TypedTiebreakingOpenList<Entry>::is_dead_end(
+    EvaluationContext &eval_context) const {
+    if (!this->evaluators.empty()){
+        return TieBreakingOpenList<Entry>::is_dead_end(eval_context);
+    } else {
+        return false;
+    }
+}
+
+    
 
 TypedTiebreakingOpenListFactory::TypedTiebreakingOpenListFactory(const Options &options)
     : options(options) {
