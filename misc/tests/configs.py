@@ -215,12 +215,36 @@ def configs_satisficing_extended():
             "--search",
             "eager(epsilon_greedy([h]), reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_FIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=FIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_RANDOM": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=RANDOM), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_LIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=LIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
         # typebased
         "typebased_ff": [
             "--heuristic",
             "h=ff()",
             "--search",
             "eager(type_based([g(),h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "type_based_ff_FIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(type_based([g(), h],queue_type=FIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "type_based_ff_RANDOM": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(type_based([g(), h],queue_type=RANDOM), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "type_based_ff_LIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(type_based([g(), h],queue_type=LIFO), reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
     }
 
