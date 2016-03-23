@@ -1,6 +1,7 @@
 def configs_optimal_core():
     return {
         # A*
+        "help": ["--help"],
         "astar_blind": [
             "--search",
             "astar(blind)"],
