@@ -18,8 +18,11 @@ class index_access_unordered_map {
     using Storage = std::vector<std::pair<K,V>>;
     Storage storage;
     std::unordered_map<K, int> key_to_index;
+    int count;
 public:
-    index_access_unordered_map(){}
+    index_access_unordered_map(){
+        count = 0;
+    }
     V & operator[](const K &key) {
         int index;
         try{
@@ -56,6 +59,13 @@ public:
     typename Storage::iterator iter_random(){
         return begin()+g_rng(storage.size());
     }
+    typename Storage::iterator iter_next(){
+        if (count == 0) {
+            count = storage.size();
+        }
+        --count;
+        return begin()+count;
+    }
     typename Storage::iterator begin() {return storage.begin();}
     typename Storage::iterator end() {return storage.end();}
     // int size (){
@@ -82,6 +92,7 @@ public:
     typedef index_access_unordered_map<Key, Bucket<Entry>> TypeBuckets;
 private:
     std::vector<ScalarEvaluator *> type_evaluators;
+    bool stochastic;
 
 protected:
     std::map<Key, TypeBuckets> buckets;

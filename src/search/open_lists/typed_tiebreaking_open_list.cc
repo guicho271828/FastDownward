@@ -21,7 +21,8 @@ using namespace std;
 template<class Entry>
 TypedTiebreakingOpenList<Entry>::TypedTiebreakingOpenList(const Options &opts)
     : TieBreakingOpenList<Entry>(opts),
-      type_evaluators(opts.get_list<ScalarEvaluator *>("type_evals")) {
+      type_evaluators(opts.get_list<ScalarEvaluator *>("type_evals")),
+      stochastic(opts.get<bool>("stochastic")){
 }
 
 template<class Entry>
@@ -54,7 +55,7 @@ Entry TypedTiebreakingOpenList<Entry>::remove_min(vector<int> *key) {
         *key = it->first;
     }
     auto &tbuckets = it->second;
-    auto it2 = tbuckets.iter_random();
+    auto it2 = stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
     auto &tbucket = it2->second;
     
     Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
@@ -94,14 +95,16 @@ TypedTiebreakingOpenListFactory::create_edge_open_list() {
 }
 
 static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
-    parser.document_synopsis("Tie-breaking open list", "");
+    parser.document_synopsis("Typed Tie-breaking open list",
+                             "Select a bucket with minimum <evals>,"
+                             "then within the bucket, diversify the search among type buckets."
+                             "Each type bucket labeled by the values of <type_evals>.");
     parser.add_list_option<ScalarEvaluator *>("evals",
-                                              "scalar evaluators."
+                                              "Scalar evaluators."
                                               "Results are sorted according to the dictionary order,"
-                                              "preferring smaller numbers."
-                                              "After ties are broken, there are further buckets based on type_evals, and a bucket is selected at random.");
-    parser.add_list_option<ScalarEvaluator *>("type_evals", "scalar evaluators. "
-                                              "Used to form the buckets which are selected randomly.");
+                                              "preferring smaller numbers.");
+    parser.add_list_option<ScalarEvaluator *>("type_evals", "Scalar evaluators. "
+                                              "Used to form the keys for the type buckets.");
     add_queue_type_option_to_parser(parser);
     parser.add_option<bool>(
         "pref_only",
@@ -110,6 +113,14 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
         "unsafe_pruning",
         "allow unsafe pruning when the main evaluator regards a state a dead end",
         "true");
+    parser.add_option<bool>(
+        "stochastic",
+        "If true, type buckets are selected at random."
+        "Otherwise, loop over the type buckets, i.e., "
+        "the last type bucket is selected in the first iteration, then "
+        "the second last type bucket is selected in the second iteration and so on."
+        "After the first type bucket is selected, select the last type bucket again."
+        , "true");
     Options opts = parser.parse();
     // opts.verify_list_non_empty<ScalarEvaluator *>("evals");
     if (!opts.is_help_mode()){
