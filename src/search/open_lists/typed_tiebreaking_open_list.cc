@@ -39,6 +39,9 @@ void TypedTiebreakingOpenList<Entry>::do_insertion(
     auto &tbuckets = buckets[key];
     auto &tbucket = tbuckets[type_key];
     tbucket.push_back(entry);
+    assert(!tbucket.empty());
+    assert(!tbuckets.empty());
+    assert(!buckets.empty());
     ++(this->size);
 }
 
@@ -46,7 +49,7 @@ template<class Entry>
 Entry TypedTiebreakingOpenList<Entry>::remove_min(vector<int> *key) {
     assert(this->size > 0);
     --(this->size);
-
+    assert(!buckets.empty());
     auto it = buckets.begin();  // sorted buckets
     assert(it != buckets.end());
     assert(!it->second.empty());
@@ -55,15 +58,17 @@ Entry TypedTiebreakingOpenList<Entry>::remove_min(vector<int> *key) {
         *key = it->first;
     }
     auto &tbuckets = it->second;
+    assert(!tbuckets.empty());
     auto it2 = stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
     auto &tbucket = it2->second;
+    assert(!tbucket.empty());
     
     Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
     if (tbucket.empty()){
         tbuckets.erase(it2);
-    }
-    if (tbuckets.empty()){
-        buckets.erase(it);
+        if (tbuckets.empty()){
+            buckets.erase(it);
+        }
     }
     return result;
 }

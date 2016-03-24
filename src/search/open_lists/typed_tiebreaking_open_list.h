@@ -39,6 +39,8 @@ public:
         try{
             int index = key_to_index.at(key);
             key_to_index.erase(key);
+            auto &last_key = storage.back().first;
+            key_to_index[last_key] = index;
             Utils::swap_and_pop_from_vector(storage, index);
         } catch (const std::out_of_range& c) {}
     }
@@ -64,6 +66,8 @@ public:
             count = storage.size();
         }
         --count;
+        assert(count>=0);
+        assert(!storage.empty());
         return begin()+count;
     }
     typename Storage::iterator begin() {return storage.begin();}
