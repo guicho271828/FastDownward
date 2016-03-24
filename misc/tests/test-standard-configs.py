@@ -64,7 +64,7 @@ def main():
         subprocess.check_call(cmd, cwd=REPO)
     for task in TASKS:
         for nick, config in CONFIGS.items():
-            for debug in [False, True]:
+            for debug in [True, False]:
                 try:
                     run_plan_script(task, nick, config, debug)
                 except subprocess.CalledProcessError:
