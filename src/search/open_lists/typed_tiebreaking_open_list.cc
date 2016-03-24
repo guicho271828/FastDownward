@@ -83,6 +83,17 @@ bool TypedTiebreakingOpenList<Entry>::is_dead_end(
     }
 }
 
+template<class Entry>
+void TypedTiebreakingOpenList<Entry>::get_involved_heuristics(
+    set<Heuristic *> &hset) {
+    for (ScalarEvaluator *evaluator : this->evaluators) {
+        evaluator->get_involved_heuristics(hset);
+    }
+    for (ScalarEvaluator *evaluator : type_evaluators) {
+        evaluator->get_involved_heuristics(hset);
+    }
+}
+
     
 
 TypedTiebreakingOpenListFactory::TypedTiebreakingOpenListFactory(const Options &options)

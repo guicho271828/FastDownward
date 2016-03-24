@@ -109,6 +109,7 @@ public:
     virtual Entry remove_min(std::vector<int> *key = nullptr) override;
     virtual bool is_dead_end(
         EvaluationContext &eval_context) const override;
+    virtual void get_involved_heuristics(std::set<Heuristic *> &hset) override;
 
 };
 
