@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cassert>
 
 template<typename V>
 std::ostream &operator<<(std::ostream &o, const std::vector<V> &v){
