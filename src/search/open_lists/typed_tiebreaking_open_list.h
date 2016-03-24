@@ -38,9 +38,9 @@ public:
     void erase(const K &key) {
         try{
             int index = key_to_index.at(key);
-            key_to_index.erase(key);
             auto &last_key = storage.back().first;
             key_to_index[last_key] = index;
+            key_to_index.erase(key);
             Utils::swap_and_pop_from_vector(storage, index);
         } catch (const std::out_of_range& c) {}
     }
