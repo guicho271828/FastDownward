@@ -243,31 +243,73 @@ def configs_satisficing_extended():
             "--heuristic",
             "h=ff()",
             "--search",
-            "eager(type_based([g(),h]), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
+            "eager(alt([single(h),type_based([g(),h])]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"
+        ],
         "type_based_ff_FIFO": [
             "--heuristic", "h=ff()",
-            "--search", "eager(type_based([g(), h],queue_type=FIFO), reopen_closed=true,"
+            "--search",
+            
+            "eager(alt([single(h),type_based([g(), h],queue_type=FIFO)]),"
+            "reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
         "type_based_ff_RANDOM": [
             "--heuristic", "h=ff()",
-            "--search", "eager(type_based([g(), h],queue_type=RANDOM), reopen_closed=true,"
+            "--search",
+            "eager(alt([single(h),type_based([g(), h],queue_type=RANDOM)]),"
+            "reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
         "type_based_ff_LIFO": [
             "--heuristic", "h=ff()",
-            "--search", "eager(type_based([g(), h],queue_type=LIFO), reopen_closed=true,"
+            "--search",
+            "eager(alt([single(h),type_based([g(), h],queue_type=LIFO)]),"
+            "reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
         # simulate typebased with typed_tiebreaking
         "typed_tiebreaking_ff_simulate_typebased": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(typed_tiebreaking([],[g(),h],queue_type=RANDOM),"
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "single(h),"
+            "typed_tiebreaking([],[g(),h])"
+            "]),"
             " reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
         "typed_tiebreaking_ff_simulate_typebased_deterministic": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(typed_tiebreaking([],[g(),h],queue_type=RANDOM,stochastic=false),"
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "single(h),"
+            "typed_tiebreaking([],[g(),h],stochastic=false)"
+            "]),"
+            "reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "td": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "]),"
             " reopen_closed=true,"
             "f_eval=sum([g(), h]))"],
+        "td2": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "typed_tiebreaking([h],[depth([h])]),"
+            "typed_tiebreaking([],[g(),h,depth([h])])"
+            "]),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "td3": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
+        "td4": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([single(h),type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
     }
 
 

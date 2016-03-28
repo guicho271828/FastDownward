@@ -19,4 +19,7 @@ with-dir (){
 
 ./cgroup-setup.sh
 
-./build.py && ./build.py --debug && cgexec -g memory:$(whoami)/ misc/tests/run-all-code-tests
+./build.py &
+./build.py --debug &
+
+wait && cgexec -g memory:$(whoami)/ misc/tests/run-all-code-tests
