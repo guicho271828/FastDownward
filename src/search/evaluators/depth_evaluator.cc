@@ -4,6 +4,7 @@
 #include "../evaluation_context.h"
 #include "../search_space.h"
 #include "../plugin.h"
+#include "../global_state.h"
 
 #include <vector>
 
@@ -42,11 +43,16 @@ namespace DepthEvaluator {
         if(current.get_id() == g_initial_state().get_id()){
             return 0;
         }else{
-            const GlobalState &parent = eval_context.get_space()->parent(current);
-            if ( db[parent].key != db[current].key ){
+            StateID parent_id = eval_context.get_space()->parent(current);
+            if (parent_id == StateID::no_state){
                 return 0;
-            }else {
-                return db[parent].depth+1;
+            } else {
+                const GlobalState &parent = g_state_registry->lookup_state(parent_id);
+                if ( db[parent].key != db[current].key ){
+                    return 0;
+                }else {
+                    return db[parent].depth+1;
+                }
             }
         }
     }

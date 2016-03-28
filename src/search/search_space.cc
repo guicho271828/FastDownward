@@ -135,10 +135,8 @@ void SearchSpace::trace_path(const GlobalState &goal_state,
     reverse(path.begin(), path.end());
 }
 
-const GlobalState SearchSpace::parent(const GlobalState &state) const {
-    return
-        g_state_registry->lookup_state(
-            search_node_infos[state].parent_state_id);
+StateID SearchSpace::parent(const GlobalState &state) const {
+    return search_node_infos[state].parent_state_id;
 }
 
 void SearchSpace::dump() const {
