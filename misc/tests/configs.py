@@ -310,6 +310,13 @@ def configs_satisficing_extended():
             "--heuristic", "h=ff()",
             "--search",
             "eager(alt([single(h),type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
+        "td-lazy": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "lazy(alt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "]))"],
     }
 
 

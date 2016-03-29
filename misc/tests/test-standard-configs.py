@@ -16,12 +16,12 @@ FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
     "miconic/s1-0.pddl",
-    "miconic/s10-0.pddl",
-    # "airport-adl/p01-airport1-p1.pddl",
-    "elevators-opt08-strips/p01.pddl",
-    "elevators-opt11-strips/p01.pddl",
-    "openstacks-opt08-strips/p01.pddl",
-    "driverlog/pfile1",
+    # "miconic/s10-0.pddl",
+    # # "airport-adl/p01-airport1-p1.pddl",
+    # "elevators-opt08-strips/p01.pddl",
+    # "elevators-opt11-strips/p01.pddl",
+    # "openstacks-opt08-strips/p01.pddl",
+    # "driverlog/pfile1",
     # "parking-opt11-strips/pfile03-011.pddl",
 ]]
 
