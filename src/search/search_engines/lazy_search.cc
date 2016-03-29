@@ -119,7 +119,7 @@ void LazySearch::generate_successors() {
             op->unmark();
         if (new_real_g < bound) {
             EvaluationContext new_eval_context(
-                current_eval_context.get_cache(), new_g, is_preferred, nullptr, nullptr);
+                current_eval_context.get_cache(), new_g, is_preferred, nullptr, &search_space);
             open_list->insert(new_eval_context, make_pair(current_state.get_id(), op));
         }
     }

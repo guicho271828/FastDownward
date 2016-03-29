@@ -7,6 +7,7 @@
 #include "../global_state.h"
 
 #include <vector>
+#include <cassert>
 
 
 namespace DepthEvaluator {
@@ -43,6 +44,7 @@ namespace DepthEvaluator {
         if(current.get_id() == g_initial_state().get_id()){
             return 0;
         }else{
+            assert(eval_context.get_space());
             StateID parent_id = eval_context.get_space()->parent(current);
             if (parent_id == StateID::no_state){
                 return 0;
