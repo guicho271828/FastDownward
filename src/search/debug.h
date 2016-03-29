@@ -25,3 +25,4 @@ std::ostream &operator<<(std::ostream &o, const std::pair<T1,T2> &v){
 }
 
 
+#define print(something) std::cout << something << std::endl;
