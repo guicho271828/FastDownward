@@ -195,9 +195,9 @@ def configs_satisficing_extended():
             "--search",
             "eager(single(sum([g(),weight(h,3)])),preferred=h)"],
         # ehc
-        "ehc_ff": [
-            "--search",
-            "ehc(ff())"],
+        # "ehc_ff": [
+        #     "--search",
+        #     "ehc(ff())"],
         # iterated
         "iterated_wa_ff": [
             "--heuristic",
