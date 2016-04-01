@@ -317,6 +317,21 @@ def configs_satisficing_extended():
             "typed_tiebreaking([h],[depth([h])],stochastic=false),"
             "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
             "]))"],
+        "walt": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(walt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "],weights=[2,1]))"],
+        "walt2": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(walt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false),"
+            "typed_tiebreaking([h],[depth([h])],stochastic=false,pref_only=true),"
+            "],weights=[2,1],boost=1000),preferred=[h])"],
     }
 
 
