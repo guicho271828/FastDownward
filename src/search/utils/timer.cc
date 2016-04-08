@@ -95,7 +95,7 @@ ostream &operator<<(ostream &os, const Timer &timer) {
         value = 0.0;  // We sometimes get inaccuracies from God knows where.
     if (value < 1e-10)
         value = 0.0;  // Don't care about such small values.
-    os << value << "s";
+    os << value << " (sec)";
     return os;
 }
 
