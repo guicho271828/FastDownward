@@ -9,27 +9,38 @@ import sys
 
 import configs
 
+import os.path as op
+
 DIR = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(DIR))
 BENCHMARKS_DIR = os.path.join(REPO, "benchmarks")
 FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
-    "miconic/s1-0.pddl",
-    "miconic/s10-0.pddl",
-    "airport-adl/p01-airport1-p1.pddl",
-    "elevators-opt08-strips/p01.pddl",
+    # "miconic/s1-0.pddl",
+    # "airport-adl/p01-airport1-p1.pddl",
+    # "elevators-opt08-strips/p01.pddl",
     # "elevators-opt11-strips/p01.pddl",
-    "openstacks-opt08-strips/p01.pddl",
-    "driverlog/pfile1",
+    # "openstacks-opt08-strips/p01.pddl",
+    # "driverlog/pfile1",
+    
+    "airport-adl/p18-airport3-p6.pddl",
+    "assembly/prob08.pddl",
+    "barman-opt11-strips/pfile01-003.pddl",
+    "blocks/probBLOCKS-7-1.pddl",
+    "childsnack-opt14-strips/child-snack_pfile01.pddl",
+    "depot/pfile4",
+    "driverlog/pfile13",
+    "freecell/pfile10",
+    "elevators-opt08-strips/p04.pddl",
     "parking-opt11-strips/pfile03-011.pddl",
 ]]
 
 CONFIGS = {}
-CONFIGS.update(configs.default_configs_optimal(core=True, ipc=True, extended=True))
-CONFIGS.update(configs.default_configs_satisficing(core=True, ipc=True, extended=True))
-CONFIGS.update(configs.task_transformation_test_configs())
-CONFIGS.update(configs.regression_test_configs())
+# CONFIGS.update(configs.default_configs_optimal(core=True, ipc=True, extended=True))
+CONFIGS.update(configs.default_configs_satisficing(core=False, ipc=False, extended=True))
+# CONFIGS.update(configs.task_transformation_test_configs())
+# CONFIGS.update(configs.regression_test_configs())
 
 if os.name == "nt":
     # No support for portfolios on Windows
@@ -51,7 +62,8 @@ def run_plan_script(task, nick, config, debug):
         cmd += config + [task]
     else:
         cmd += [task] + config
-    print("\nRun {}:".format(cmd))
+    print("\nTask: {}/{}".format(op.basename(op.dirname(task)),op.basename(task)))
+    print("\nNick: {}".format(nick))
     sys.stdout.flush()
     subprocess.check_call(cmd)
 
@@ -71,7 +83,7 @@ def main():
         subprocess.check_call(cmd, cwd=REPO)
     for task in TASKS:
         for nick, config in CONFIGS.items():
-            for debug in [True, False]:
+            for debug in [True]: # , False
                 try:
                     run_plan_script(task, nick, config, debug)
                 except subprocess.CalledProcessError:
