@@ -62,6 +62,7 @@ set(CORE_SOURCES
         open_lists/bandits/egreedy.cc
         open_lists/bandits/ucb.cc
         open_lists/bandits/edecreasing.cc
+        open_lists/bandits/softmax.cc
         )
 
 fast_downward_add_headers_to_sources_list(CORE_SOURCES)
