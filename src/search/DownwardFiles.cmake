@@ -59,6 +59,7 @@ set(CORE_SOURCES
         open_lists/type_based_open_list.cc
         open_lists/typed_tiebreaking_open_list.cc
         open_lists/bandit_open_list.cc
+        open_lists/bandits/egreedy.cc
         )
 
 fast_downward_add_headers_to_sources_list(CORE_SOURCES)
