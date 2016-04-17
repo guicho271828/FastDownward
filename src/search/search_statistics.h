@@ -2,8 +2,9 @@
 #ifndef SEARCH_STATISTICS_H
 #define SEARCH_STATISTICS_H
 
-#include <map>
+#include <unordered_map>
 #include <vector>
+#include "utils/hash.h"
 
 /*
   This class keeps track of search statistics.
@@ -15,7 +16,7 @@
 
 class SearchStatistics {
     // General statistics
-    std::map<std::vector<int>,int> expansion_distribution;
+    std::unordered_map<std::vector<int>,int> expansion_distribution;
     int expanded_states;  // no states for which successors were generated
     int evaluated_states; // no states for which h fn was computed
     int evaluations;      // no of heuristic evaluations performed
