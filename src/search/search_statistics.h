@@ -1,5 +1,9 @@
+/* -*- mode:c++ -*- */
 #ifndef SEARCH_STATISTICS_H
 #define SEARCH_STATISTICS_H
+
+#include <map>
+#include <vector>
 
 /*
   This class keeps track of search statistics.
@@ -11,6 +15,7 @@
 
 class SearchStatistics {
     // General statistics
+    std::map<std::vector<int>,int> expansion_distribution;
     int expanded_states;  // no states for which successors were generated
     int evaluated_states; // no states for which h fn was computed
     int evaluations;      // no of heuristic evaluations performed
@@ -33,6 +38,7 @@ public:
     ~SearchStatistics() = default;
 
     // Methods that update statistics.
+    void inc_expansion_distribution(std::vector<int> key) {expansion_distribution[key]++; }
     void inc_expanded(int inc = 1) {expanded_states += inc; }
     void inc_evaluated_states(int inc = 1) {evaluated_states += inc; }
     void inc_generated(int inc = 1) {generated_states += inc; }

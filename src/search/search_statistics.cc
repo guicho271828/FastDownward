@@ -2,6 +2,7 @@
 
 #include "utils/timer.h"
 #include "utils/system.h"
+#include "debug.h"
 
 #include <iostream>
 
@@ -61,6 +62,10 @@ void SearchStatistics::print_detailed_statistics() const {
     cout << "Generated " << generated_states << " state(s)." << endl;
     cout << "Dead ends: " << dead_end_states << " state(s)." << endl;
 
+    for (auto it : expansion_distribution){
+        cout << "Node-Destribution: " << it.second << " " << it.first << endl;
+    }
+    
     if (lastjump_f_value >= 0) {
         cout << "Expanded until last jump: "
              << lastjump_expanded_states << " state(s)." << endl;
