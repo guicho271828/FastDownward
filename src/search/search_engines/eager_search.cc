@@ -234,8 +234,9 @@ pair<SearchNode, bool> EagerSearch::fetch_next_node() {
             return make_pair(dummy_node, false);
         }
         vector<int> last_key_removed;
-        StateID id = open_list->remove_min(
-            use_multi_path_dependence ? &last_key_removed : nullptr);
+        // StateID id = open_list->remove_min(
+        //     use_multi_path_dependence ? &last_key_removed : nullptr);
+        StateID id = open_list->remove_min(&last_key_removed);
         // TODO is there a way we can avoid creating the state here and then
         //      recreate it outside of this function with node.get_state()?
         //      One way would be to store GlobalState objects inside SearchNodes
@@ -273,6 +274,7 @@ pair<SearchNode, bool> EagerSearch::fetch_next_node() {
         assert(!node.is_dead_end());
         update_f_value_statistics(node);
         statistics.inc_expanded();
+        statistics.inc_expansion_distribution(last_key_removed);
         return make_pair(node, true);
     }
 }
