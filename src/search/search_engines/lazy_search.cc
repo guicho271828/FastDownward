@@ -130,8 +130,8 @@ SearchStatus LazySearch::fetch_next_state() {
         cout << "Completely explored state space -- no solution!" << endl;
         return FAILED;
     }
-
-    EdgeOpenListEntry next = open_list->remove_min();
+    last_key_removed.clear();
+    EdgeOpenListEntry next = open_list->remove_min(&last_key_removed);
 
     current_predecessor_id = next.first;
     current_operator = next.second;
@@ -204,6 +204,7 @@ SearchStatus LazySearch::step() {
             }
             generate_successors();
             statistics.inc_expanded();
+            statistics.inc_expansion_distribution(last_key_removed);
         } else {
             node.mark_as_dead_end();
             statistics.inc_dead_ends();
