@@ -1,9 +1,11 @@
+/* -*- mode:c++ -*- */
 #ifndef SEARCH_ENGINE_H
 #define SEARCH_ENGINE_H
 
 #include <vector>
 
 class Heuristic;
+class ScalarEvaluator;
 class OptionParser;
 class Options;
 
@@ -26,6 +28,8 @@ protected:
     SearchSpace search_space;
     SearchProgress search_progress;
     SearchStatistics statistics;
+
+    std::vector<ScalarEvaluator *> stat_evaluators;
     int bound;
     OperatorCost cost_type;
     double max_time;

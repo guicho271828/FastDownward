@@ -22,6 +22,7 @@ SearchEngine::SearchEngine(const Options &opts)
     : status(IN_PROGRESS),
       solution_found(false),
       search_space(OperatorCost(opts.get_enum("cost_type"))),
+      stat_evaluators(opts.get_list<ScalarEvaluator *>("stat_evals")),
       cost_type(OperatorCost(opts.get_enum("cost_type"))),
       max_time(opts.get<double>("max_time")) {
     if (opts.get<int>("bound") < 0) {
@@ -105,6 +106,11 @@ void SearchEngine::add_options_to_parser(OptionParser &parser) {
         "experiments. Timed-out searches are treated as failed searches, "
         "just like incomplete search algorithms that exhaust their search space.",
         "infinity");
+    parser.add_list_option<ScalarEvaluator *>(
+        "stat_evals",
+        "Count the number of nodes for each vector value of ScalarEvaluator, "
+        "and dump the statistics at the end of the search",
+        "[]");
 }
 
 void print_initial_h_values(const EvaluationContext &eval_context) {
