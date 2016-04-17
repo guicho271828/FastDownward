@@ -53,15 +53,17 @@ Entry TypedTiebreakingOpenList<Entry>::remove_min(vector<int> *key) {
     auto it = buckets.begin();  // sorted buckets
     assert(it != buckets.end());
     assert(!it->second.empty());
-    if (key) {
-        assert(key->empty());
-        *key = it->first;
-    }
     auto &tbuckets = it->second;
     assert(!tbuckets.empty());
     auto it2 = stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
     auto &tbucket = it2->second;
     assert(!tbucket.empty());
+    if (key) {
+        assert(key->empty());
+        key->reserve(it->first.size()+it2->first.size());
+        for (int k : it->first){ key->push_back(k); }
+        for (int k : it2->first){ key->push_back(k); }
+    }
     
     Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
     if (tbucket.empty()){
