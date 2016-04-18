@@ -53,6 +53,9 @@ void EagerSearch::initialize() {
     if (f_evaluator) {
         f_evaluator->get_involved_heuristics(hset);
     }
+    for (auto e : stat_evaluators){
+        e->get_involved_heuristics(hset);
+    }
 
     heuristics.assign(hset.begin(), hset.end());
     assert(!heuristics.empty());
@@ -274,7 +277,6 @@ pair<SearchNode, bool> EagerSearch::fetch_next_node() {
         assert(!node.is_dead_end());
         update_f_value_statistics(node);
         statistics.inc_expanded();
-        statistics.inc_expansion_distribution(last_key_removed);
         return make_pair(node, true);
     }
 }
@@ -299,14 +301,25 @@ void EagerSearch::start_f_value_statistics(EvaluationContext &eval_context) {
 /* TODO: HACK! This is very inefficient for simply looking up an h value.
    Also, if h values are not saved it would recompute h for each and every state. */
 void EagerSearch::update_f_value_statistics(const SearchNode &node) {
-    if (f_evaluator) {
+    if (f_evaluator || !stat_evaluators.empty()) {
         /*
           TODO: This code doesn't fit the idea of supporting
           an arbitrary f evaluator.
         */
         EvaluationContext eval_context(node.get_state(), node.get_g(), false, &statistics, &search_space);
-        int f_value = eval_context.get_heuristic_value(f_evaluator);
-        statistics.report_f_value_progress(f_value);
+        if (f_evaluator){
+            int f_value = eval_context.get_heuristic_value(f_evaluator);
+            statistics.report_f_value_progress(f_value);
+        }
+        if (!stat_evaluators.empty()){
+            vector<int> key;
+            key.reserve(stat_evaluators.size());
+            for (auto e : stat_evaluators){
+                int e_value = eval_context.get_heuristic_value(e);
+                key.push_back(e_value);
+            }
+            statistics.inc_expansion_distribution(key);
+        }
     }
 }
 
