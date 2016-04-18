@@ -57,6 +57,9 @@ void LazySearch::initialize() {
     // not also used in the open list).
     hset.insert(preferred_operator_heuristics.begin(),
                 preferred_operator_heuristics.end());
+    for (auto e : stat_evaluators){
+        e->get_involved_heuristics(hset);
+    }
 
     heuristics.assign(hset.begin(), hset.end());
     assert(!heuristics.empty());
@@ -130,8 +133,7 @@ SearchStatus LazySearch::fetch_next_state() {
         cout << "Completely explored state space -- no solution!" << endl;
         return FAILED;
     }
-    last_key_removed.clear();
-    EdgeOpenListEntry next = open_list->remove_min(&last_key_removed);
+    EdgeOpenListEntry next = open_list->remove_min();
 
     current_predecessor_id = next.first;
     current_operator = next.second;
@@ -204,7 +206,15 @@ SearchStatus LazySearch::step() {
             }
             generate_successors();
             statistics.inc_expanded();
-            statistics.inc_expansion_distribution(last_key_removed);
+            if (!stat_evaluators.empty()){
+                vector<int> key;
+                key.reserve(stat_evaluators.size());
+                for (auto e : stat_evaluators){
+                    int e_value = current_eval_context.get_heuristic_value(e);
+                    key.push_back(e_value);
+                }
+                statistics.inc_expansion_distribution(key);
+            }
         } else {
             node.mark_as_dead_end();
             statistics.inc_dead_ends();

@@ -37,7 +37,6 @@ protected:
     int current_g;
     int current_real_g;
     EvaluationContext current_eval_context;
-    std::vector<int> last_key_removed;
     virtual void initialize() override;
     virtual SearchStatus step() override;
 
