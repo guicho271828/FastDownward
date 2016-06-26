@@ -48,6 +48,7 @@ set(CORE_SOURCES
         variable_order_finder.cc
 
         open_lists/alternation_open_list.cc
+        open_lists/weighted_alternation_open_list.cc
         open_lists/bucket_open_list.cc
         open_lists/epsilon_greedy_open_list.cc
         open_lists/open_list.cc
@@ -56,6 +57,7 @@ set(CORE_SOURCES
         open_lists/standard_scalar_open_list.cc
         open_lists/tiebreaking_open_list.cc
         open_lists/type_based_open_list.cc
+        open_lists/typed_tiebreaking_open_list.cc
 )
 
 fast_downward_add_headers_to_sources_list(CORE_SOURCES)
@@ -143,6 +145,13 @@ fast_downward_plugin(
     HELP "The g-evaluator"
     SOURCES
         evaluators/g_evaluator.cc
+)
+
+fast_downward_plugin(
+    NAME DEPTH_EVALUATOR
+    HELP "The depth-evaluator"
+    SOURCES
+        evaluators/depth_evaluator.cc
 )
 
 fast_downward_plugin(

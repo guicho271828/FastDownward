@@ -1,6 +1,7 @@
 def configs_optimal_core():
     return {
         # A*
+        "help": ["--help"],
         "astar_blind": [
             "--search",
             "astar(blind)"],
@@ -122,6 +123,33 @@ def configs_optimal_extended():
         "astar_lmcount_lm_merged_rhw_hm_no_order": [
             "--search",
             "astar(lmcount(lm_merged([lm_rhw(),lm_hm(m=1)]),admissible=true),mpd=true)"],
+        # different last-resort
+        "tiebreaking_lmcut": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_FIFO": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=FIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_RANDOM": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=RANDOM), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "tiebreaking_lmcut_LIFO": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=LIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "typed_tiebreaking_lmcut_RandomDepth_RandomOrder": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(typed_tiebreaking([sum([g(), h]), h],[depth([sum([g(), h]), h])],queue_type=RANDOM),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "typed_tiebreaking_lmcut_RandomDepth_RandomOrder": [
+            "--heuristic", "h=lmcut()",
+            "--search", "eager(typed_tiebreaking([sum([g(), h]), h],[depth([sum([g(), h]), h])],queue_type=RANDOM,stochastic=false),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
     }
 
 
@@ -167,9 +195,9 @@ def configs_satisficing_extended():
             "--search",
             "eager(single(sum([g(),weight(h,3)])),preferred=h)"],
         # ehc
-        "ehc_ff": [
-            "--search",
-            "ehc(ff())"],
+        # "ehc_ff": [
+        #     "--search",
+        #     "ehc(ff())"],
         # iterated
         "iterated_wa_ff": [
             "--heuristic",
@@ -189,7 +217,121 @@ def configs_satisficing_extended():
             "--heuristic",
             "h=lmcut()",
             "--search",
-            "eager(single_buckets(h), reopen_closed=true)"],
+            "eager(single_buckets(h), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # epsilon-greedy
+        "egreedy_ff": [
+            "--heuristic",
+            "h=ff()",
+            "--search",
+            "eager(epsilon_greedy([h]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_FIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=FIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_RANDOM": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=RANDOM), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "epsilon_greedy_ff_LIFO": [
+            "--heuristic", "h=ff()",
+            "--search", "eager(epsilon_greedy([h],queue_type=LIFO), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # typebased
+        "typebased_ff": [
+            "--heuristic",
+            "h=ff()",
+            "--search",
+            "eager(alt([single(h),type_based([g(),h])]), reopen_closed=true,"
+            "f_eval=sum([g(), h]))"
+        ],
+        "type_based_ff_FIFO": [
+            "--heuristic", "h=ff()",
+            "--search",
+            
+            "eager(alt([single(h),type_based([g(), h],queue_type=FIFO)]),"
+            "reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "type_based_ff_RANDOM": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([single(h),type_based([g(), h],queue_type=RANDOM)]),"
+            "reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "type_based_ff_LIFO": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([single(h),type_based([g(), h],queue_type=LIFO)]),"
+            "reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        # simulate typebased with typed_tiebreaking
+        "typed_tiebreaking_ff_simulate_typebased": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "single(h),"
+            "typed_tiebreaking([],[g(),h])"
+            "]),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "typed_tiebreaking_ff_simulate_typebased_deterministic": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "single(h),"
+            "typed_tiebreaking([],[g(),h],stochastic=false)"
+            "]),"
+            "reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "td": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "]),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "td2": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt(["
+            "typed_tiebreaking([h],[depth([h])]),"
+            "typed_tiebreaking([],[g(),h,depth([h])])"
+            "]),"
+            " reopen_closed=true,"
+            "f_eval=sum([g(), h]))"],
+        "td3": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
+        "td4": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(alt([single(h),type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
+        "td-lazy": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "lazy(alt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "]))"],
+        "walt": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(walt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "],weights=[2,1]))"],
+        "walt2": [
+            "--heuristic", "h=ff()",
+            "--search",
+            "eager(walt(["
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false),"
+            "typed_tiebreaking([h],[depth([h])],stochastic=false,pref_only=true),"
+            "],weights=[2,1],boost=1000),preferred=[h])"],
     }
 
 

@@ -5,17 +5,19 @@
 #include <vector>
 
 #include "../evaluation_context.h"
+#include "../utils/rng.h"
 
 class GlobalOperator;
 class Heuristic;
 class StateID;
 
+enum QueueType {FIFO = 0, LIFO = 1, RANDOM = 2};
 
 
 template<class Entry>
 class OpenList {
     bool only_preferred;
-
+    
 protected:
     /*
       Insert an entry into the open list. This is called by insert, so
@@ -26,9 +28,10 @@ protected:
     */
     virtual void do_insertion(EvaluationContext &eval_context,
                               const Entry &entry) = 0;
+    QueueType queue_type;
 
 public:
-    explicit OpenList(bool preferred_only = false);
+    explicit OpenList(bool preferred_only = false, QueueType queue_type = FIFO);
     virtual ~OpenList() = default;
 
     /*
@@ -142,8 +145,8 @@ using EdgeOpenList = OpenList<EdgeOpenListEntry>;
 
 
 template<class Entry>
-OpenList<Entry>::OpenList(bool only_preferred)
-    : only_preferred(only_preferred) {
+OpenList<Entry>::OpenList(bool only_preferred, QueueType queue_type)
+    : only_preferred(only_preferred),queue_type(queue_type) {
 }
 
 template<class Entry>
@@ -162,6 +165,35 @@ void OpenList<Entry>::insert(
 template<class Entry>
 bool OpenList<Entry>::only_contains_preferred_entries() const {
     return only_preferred;
+}
+
+void add_queue_type_option_to_parser(OptionParser &parser, std::string def_type = "FIFO");
+
+template<class Entry, class Container>
+Entry pop_bucket(Container &bucket, const QueueType &queue_type){
+    switch (queue_type){
+    case LIFO:
+    {
+        Entry result = bucket.back();
+        bucket.pop_back();
+        return result;
+    }
+    case RANDOM:{
+        int i = g_rng(bucket.size());
+        auto it = bucket.begin()+i;
+        Entry result = *it; // should be copied because 
+        *it = bucket.back(); // this overwrites the original
+        bucket.pop_back();
+        return result;
+    }
+    case FIFO:
+    default:
+    {
+        Entry result = bucket.front();
+        bucket.pop_front();
+        return result;
+    }
+    }
 }
 
 #endif

@@ -21,6 +21,9 @@ public:
     void set_help_mode(bool hm) {
         help_mode = hm;
     }
+    bool is_help_mode(){
+        return help_mode;
+    }
 
     std::map<std::string, Any> storage;
 
@@ -43,7 +46,7 @@ public:
         } catch (const BadAnyCast &) {
             std::cout << "Invalid conversion while retrieving config options!"
                       << std::endl
-                      << key << " is not of type " << TypeNamer<T>::name()
+                      << "For key "<< key << ", stored value is not of type " << TypeNamer<T>::name()
                       << std::endl << "exiting" << std::endl;
             Utils::exit_with(Utils::ExitCode::CRITICAL_ERROR);
         }

@@ -17,32 +17,6 @@ using Utils::ExitCode;
 
 
 template<class Entry>
-class AlternationOpenList : public OpenList<Entry> {
-    vector<unique_ptr<OpenList<Entry>>> open_lists;
-    vector<int> priorities;
-
-    const int boost_amount;
-protected:
-    virtual void do_insertion(EvaluationContext &eval_context,
-                              const Entry &entry) override;
-
-public:
-    explicit AlternationOpenList(const Options &opts);
-    virtual ~AlternationOpenList() override = default;
-
-    virtual Entry remove_min(vector<int> *key = nullptr) override;
-    virtual bool empty() const override;
-    virtual void clear() override;
-    virtual void boost_preferred() override;
-    virtual void get_involved_heuristics(set<Heuristic *> &hset) override;
-    virtual bool is_dead_end(
-        EvaluationContext &eval_context) const override;
-    virtual bool is_reliable_dead_end(
-        EvaluationContext &eval_context) const override;
-};
-
-
-template<class Entry>
 AlternationOpenList<Entry>::AlternationOpenList(const Options &opts)
     : boost_amount(opts.get<int>("boost")) {
     vector<shared_ptr<OpenListFactory>> open_list_factories(
