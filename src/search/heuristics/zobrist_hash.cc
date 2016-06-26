@@ -15,7 +15,7 @@ ZobristHash::~ZobristHash() {
 }
 
 void ZobristHash::initialize() {
-    cout << "Initializing goal count heuristic..." << endl;
+    cout << "Initializing zobrist hash..." << endl;
     map.resize(task_proxy.get_variables().size());
     int i = 0;
     for (VariableProxy var : task_proxy.get_variables()) {
@@ -40,7 +40,7 @@ int ZobristHash::compute_heuristic(const GlobalState &global_state) {
 }
 
 static Heuristic *_parse(OptionParser &parser) {
-    parser.document_synopsis("Zobrish hash function", "");
+    parser.document_synopsis("Zobrist hash function", "");
     parser.document_language_support("action costs", "ignored by design");
     parser.document_language_support("conditional effects", "supported");
     parser.document_language_support("axioms", "supported");
