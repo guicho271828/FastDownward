@@ -36,7 +36,8 @@ int ZobristHash::compute_heuristic(const GlobalState &global_state) {
         r = r ^ map[i][fact.get_value()];
         i++;
     }
-    return r;
+    // cout << "Zobrist hashvar:" << r << " " << (int)(r) << " " << abs((int)(r)) << " " << (abs((int)(r)) >> 1) << endl;
+    return (abs((int)(r)) >> 1);
 }
 
 static Heuristic *_parse(OptionParser &parser) {
