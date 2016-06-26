@@ -141,6 +141,13 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+    NAME ZOBRIST_HASH
+    HELP "The zobrist hash function"
+    SOURCES
+        heuristics/zobrist_hash.cc
+)
+
+fast_downward_plugin(
     NAME G_EVALUATOR
     HELP "The g-evaluator"
     SOURCES

@@ -34,6 +34,11 @@ public:
         return distribution(rng);
     }
 
+    unsigned int next32() {
+        std::uniform_int_distribution<unsigned int> distribution(0, std::numeric_limits<unsigned int>::max());
+        return distribution(rng);
+    }
+    
     template<typename T>
     typename std::vector<T>::const_iterator choose(const std::vector<T> &vec) {
         return vec.begin() + operator()(vec.size());
