@@ -8,7 +8,9 @@ using namespace std;
 
 namespace RandomHeuristics {
 RandomHeuristics::RandomHeuristics(const Options &opts)
-    : Heuristic(opts) {
+    : Heuristic(opts),
+      db(-1)
+{
 }
 
 RandomHeuristics::~RandomHeuristics() {
@@ -16,6 +18,7 @@ RandomHeuristics::~RandomHeuristics() {
 
 void RandomHeuristics::initialize() {
     cout << "Initializing random heuristics..." << endl;
+    //    db = PerStateInformation<int>(-1);
 }
 
 int RandomHeuristics::compute_heuristic(const GlobalState &global_state) {
