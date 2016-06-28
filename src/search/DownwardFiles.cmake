@@ -145,6 +145,7 @@ fast_downward_plugin(
     HELP "The zobrist hash function"
     SOURCES
         heuristics/zobrist_hash.cc
+        heuristics/random.cc
 )
 
 fast_downward_plugin(
