@@ -48,10 +48,10 @@ public:
 
 
 class SearchSpace {
-    PerStateInformation<SearchNodeInfo> search_node_infos;
 
     OperatorCost cost_type;
 public:
+    PerStateInformation<SearchNodeInfo> search_node_infos;
     SearchSpace(OperatorCost cost_type_);
     SearchNode get_node(const GlobalState &state);
     void trace_path(const GlobalState &goal_state,
