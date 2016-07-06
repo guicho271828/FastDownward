@@ -146,6 +146,7 @@ fast_downward_plugin(
     SOURCES
         heuristics/zobrist_hash.cc
         heuristics/random.cc
+        evaluators/random_edge_evaluator.cc
 )
 
 fast_downward_plugin(
