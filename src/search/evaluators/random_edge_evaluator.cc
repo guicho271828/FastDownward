@@ -20,7 +20,7 @@ using namespace std;
 namespace RandomEdgeEvaluator {
     RandomEdgeEvaluator::RandomEdgeEvaluator(const Options &opts) :
         ScalarEvaluator(), state_db(-1),
-        bound((int)(numeric_limits<int>::max() * opts.get<double>("threashold"))) {}
+        bound((int)(numeric_limits<int>::max() * opts.get<double>("threshold"))) {}
     EvaluationResult RandomEdgeEvaluator::compute_result(EvaluationContext &ctx) {
         EvaluationResult result;
         auto current = ctx.get_state();
@@ -53,9 +53,9 @@ namespace RandomEdgeEvaluator {
         parser.document_synopsis("RandomEdge evaluator",
                                  "Calculates the random value for a node, based on the edge it comes from.");
         parser.add_option<double>(
-            "threashold",
-            "Threashold for random value. Mapped into 32bit integer space and "
-            "the random value above the threashold is treated as infinite (pruned). "
+            "threshold",
+            "Threshold for random value. Mapped into 32bit integer space and "
+            "the random value above the threshold is treated as infinite (pruned). "
             "Any value below 1.0 makes the algorithm incomplete.",
             "1.0",
             Bounds("0.0", "1.0"));

@@ -10,7 +10,7 @@ using namespace std;
 namespace RandomHeuristics {
 RandomHeuristics::RandomHeuristics(const Options &opts)
     : Heuristic(opts),
-      bound((int)(numeric_limits<int>::max() * opts.get<double>("threashold"))),
+      bound((int)(numeric_limits<int>::max() * opts.get<double>("threshold"))),
       db(-1)
 {
 }
@@ -42,13 +42,13 @@ static Heuristic *_parse(OptionParser &parser) {
     parser.document_language_support("axioms", "supported");
     parser.document_property("admissible", "no");
     parser.document_property("consistent", "no");
-    parser.document_property("safe", "no when threashold is below 1.0");
+    parser.document_property("safe", "no when threshold is below 1.0");
     parser.document_property("preferred operators", "no");
 
     parser.add_option<double>(
-        "threashold",
-        "Threashold for random value. Mapped into 32bit integer space and "
-        "the random value above the threashold is treated as infinite (pruned). "
+        "threshold",
+        "Threshold for random value. Mapped into 32bit integer space and "
+        "the random value above the threshold is treated as infinite (pruned). "
         "Any value below 1.0 makes the algorithm incomplete.",
         "1.0",
         Bounds("0.0", "1.0"));
