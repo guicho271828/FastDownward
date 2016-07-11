@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <cassert>
+using namespace std;
 
 
 // GlobalState current_state = goal_state;
@@ -17,35 +18,55 @@
 // const GlobalOperator *op = info.creating_operator;
 
 namespace RandomEdgeEvaluator {
+    RandomEdgeEvaluator::RandomEdgeEvaluator(const Options &opts) :
+        ScalarEvaluator(), state_db(-1),
+        bound((int)(numeric_limits<int>::max() * opts.get<double>("threashold"))) {}
     EvaluationResult RandomEdgeEvaluator::compute_result(EvaluationContext &ctx) {
         EvaluationResult result;
         auto current = ctx.get_state();
-        auto key = std::make_pair(
-            current.get_id(),
-            ctx.get_space()->search_node_infos[current].creating_operator);
-        auto it = cache.find(key);
-        if (it == cache.end()){
-            int r = g_rng.next32();
-            cache[key] = r;
-            result.set_h_value(r);
-        }else{
-            result.set_h_value(it->second);
+        int &state_value = state_db[current];
+        if (state_value < 0){
+            state_value = g_rng.next32();
         }
+        auto op = ctx.get_space()->search_node_infos[current].creating_operator;
+
+        auto it = edge_db.find(op);
+        int edge_value;
+        if (it == edge_db.end()){
+            edge_value = g_rng.next32();
+            edge_db[op] = edge_value;
+        }else{
+            edge_value = it->second;
+        }
+
+        int value = state_value ^ edge_value;
+
+        if (value > bound){
+            value = EvaluationResult::INFTY;
+        }
+        
+        result.set_h_value(value);
         return result;
     }
     
     static ScalarEvaluator *_parse(OptionParser &parser) {
         parser.document_synopsis("RandomEdge evaluator",
                                  "Calculates the random value for a node, based on the edge it comes from.");
-
+        parser.add_option<double>(
+            "threashold",
+            "Threashold for random value. Mapped into 32bit integer space and "
+            "the random value above the threashold is treated as infinite (pruned). "
+            "Any value below 1.0 makes the algorithm incomplete.",
+            "1.0",
+            Bounds("0.0", "1.0"));
         Options opts = parser.parse();
 
         if (parser.dry_run())
             return 0;
         else
-            return new RandomEdgeEvaluator;
+            return new RandomEdgeEvaluator(opts);
     }
 
-    static Plugin<ScalarEvaluator> _plugin("random_edge", _parse);
+    static Plugin<ScalarEvaluator> _plugin("random_edge_xor", _parse);
 }
 

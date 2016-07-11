@@ -4,6 +4,7 @@
 #include "../scalar_evaluator.h"
 #include <vector>
 #include <utility>
+#include <map>
 #include "../per_state_information.h"
 #include "../global_state.h"
 #include "../global_operator.h"
@@ -14,10 +15,11 @@ class Options;
 
 namespace RandomEdgeEvaluator {
     class RandomEdgeEvaluator : public ScalarEvaluator {
-        std::unordered_map<std::pair<StateID,const GlobalOperator*>,int> cache;
-
+        PerStateInformation<int> state_db;
+        std::map<const GlobalOperator*,int> edge_db;
+        int bound;
     public:
-        explicit RandomEdgeEvaluator() = default;
+        explicit RandomEdgeEvaluator(const Options &options);
         virtual ~RandomEdgeEvaluator() override = default;
 
         virtual EvaluationResult compute_result(
