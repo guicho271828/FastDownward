@@ -7,6 +7,7 @@
 
 namespace RandomHeuristics {
     class RandomHeuristics : public Heuristic {
+        int bound;
     protected:
         PerStateInformation<int> db;
         virtual void initialize();
