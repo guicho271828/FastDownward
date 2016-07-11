@@ -67,6 +67,6 @@ namespace RandomEdgeEvaluator {
             return new RandomEdgeEvaluator(opts);
     }
 
-    static Plugin<ScalarEvaluator> _plugin("random_edge_xor", _parse);
+    static Plugin<ScalarEvaluator> _plugin("random_edge", _parse);
 }
 
