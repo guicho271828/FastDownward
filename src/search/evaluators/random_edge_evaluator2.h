@@ -4,6 +4,7 @@
 #include "../scalar_evaluator.h"
 #include <vector>
 #include <utility>
+#include <map>
 #include "../per_state_information.h"
 #include "../global_state.h"
 #include "../global_operator.h"
@@ -12,14 +13,14 @@
 class Heuristic;
 class Options;
 
-namespace RandomEdgeEvaluator2 {
-    class RandomEdgeEvaluator2 : public ScalarEvaluator {
+namespace RandomEdgeEvaluatorXor {
+    class RandomEdgeEvaluatorXor : public ScalarEvaluator {
         PerStateInformation<int> state_db;
         std::map<const GlobalOperator*,int> edge_db;
         int bound;
     public:
-        explicit RandomEdgeEvaluator2(const Options &options);
-        virtual ~RandomEdgeEvaluator2() override = default;
+        explicit RandomEdgeEvaluatorXor(const Options &options);
+        virtual ~RandomEdgeEvaluatorXor() override = default;
 
         virtual EvaluationResult compute_result(
             EvaluationContext &eval_context) override;

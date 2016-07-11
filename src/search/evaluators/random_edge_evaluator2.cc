@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <cassert>
+using namespace std;
 
 
 // GlobalState current_state = goal_state;
@@ -16,11 +17,11 @@
 //     const SearchNodeInfo &info = search_node_infos[current_state];
 // const GlobalOperator *op = info.creating_operator;
 
-namespace RandomEdgeEvaluator2 {
-    RandomEdgeEvaluator2(const Options &opts) :
-        ScalarEvaluator(), state_db(-1), edge_db(-1),
+namespace RandomEdgeEvaluatorXor {
+    RandomEdgeEvaluatorXor::RandomEdgeEvaluatorXor(const Options &opts) :
+        ScalarEvaluator(), state_db(-1),
         bound((int)(numeric_limits<int>::max() * opts.get<double>("threashold"))) {}
-    EvaluationResult compute_result(EvaluationContext &ctx) {
+    EvaluationResult RandomEdgeEvaluatorXor::compute_result(EvaluationContext &ctx) {
         EvaluationResult result;
         auto current = ctx.get_state();
         int &state_value = state_db[current];
@@ -28,10 +29,16 @@ namespace RandomEdgeEvaluator2 {
             state_value = g_rng.next32();
         }
         auto op = ctx.get_space()->search_node_infos[current].creating_operator;
-        int &edge_value = edge_db[op];
-        if (edge_value < 0){
+
+        auto it = edge_db.find(op);
+        int edge_value;
+        if (it == edge_db.end()){
             edge_value = g_rng.next32();
+            edge_db[op] = edge_value;
+        }else{
+            edge_value = it->second;
         }
+
         int value = state_value ^ edge_value;
 
         if (value > bound){
@@ -57,9 +64,9 @@ namespace RandomEdgeEvaluator2 {
         if (parser.dry_run())
             return 0;
         else
-            return new RandomEdgeEvaluator2(opts);
+            return new RandomEdgeEvaluatorXor(opts);
     }
 
-    static Plugin<ScalarEvaluator> _plugin("random_edge", _parse);
+    static Plugin<ScalarEvaluator> _plugin("random_edge_xor", _parse);
 }
 
