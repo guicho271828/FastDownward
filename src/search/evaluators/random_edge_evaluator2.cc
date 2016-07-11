@@ -21,17 +21,18 @@ namespace RandomEdgeEvaluator2 {
     EvaluationResult compute_result(EvaluationContext &ctx) {
         EvaluationResult result;
         auto current = ctx.get_state();
-        int &state_var = state_db[current];
-        if (state_var < 0){
-            state_var = g_rng.next32();
+        int &state_value = state_db[current];
+        if (state_value < 0){
+            state_value = g_rng.next32();
         }
         auto op = ctx.get_space()->search_node_infos[current].creating_operator;
-        int &edge_var = edge_db[op];
-        if (edge_var < 0){
-            edge_var = g_rng.next32();
+        int &edge_value = edge_db[op];
+        if (edge_value < 0){
+            edge_value = g_rng.next32();
         }
+        int value = state_value ^ edge_value;
         
-        result.set_h_value(state_var ^ edge_var);
+        result.set_h_value(value);
         return result;
     }
     
