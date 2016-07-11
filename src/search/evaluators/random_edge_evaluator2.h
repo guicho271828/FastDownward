@@ -16,7 +16,7 @@ namespace RandomEdgeEvaluator2 {
     class RandomEdgeEvaluator2 : public ScalarEvaluator {
         PerStateInformation<int> state_db;
         std::map<const GlobalOperator*,int> edge_db;
-
+        int bound;
     public:
         explicit RandomEdgeEvaluator2(const Options &options);
         virtual ~RandomEdgeEvaluator2() override = default;

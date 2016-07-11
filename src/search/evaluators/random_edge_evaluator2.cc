@@ -17,7 +17,9 @@
 // const GlobalOperator *op = info.creating_operator;
 
 namespace RandomEdgeEvaluator2 {
-    RandomEdgeEvaluator2(const Options &opts) : ScalarEvaluator(), state_db(-1), edge_db(-1) {}
+    RandomEdgeEvaluator2(const Options &opts) :
+        ScalarEvaluator(), state_db(-1), edge_db(-1),
+        bound((int)(numeric_limits<int>::max() * opts.get<double>("threashold"))) {}
     EvaluationResult compute_result(EvaluationContext &ctx) {
         EvaluationResult result;
         auto current = ctx.get_state();
@@ -31,6 +33,10 @@ namespace RandomEdgeEvaluator2 {
             edge_value = g_rng.next32();
         }
         int value = state_value ^ edge_value;
+
+        if (value > bound){
+            value = EvaluationResult::INFTY;
+        }
         
         result.set_h_value(value);
         return result;
@@ -39,7 +45,13 @@ namespace RandomEdgeEvaluator2 {
     static ScalarEvaluator *_parse(OptionParser &parser) {
         parser.document_synopsis("RandomEdge evaluator",
                                  "Calculates the random value for a node, based on the edge it comes from.");
-
+        parser.add_option<double>(
+            "threashold",
+            "Threashold for random value. Mapped into 32bit integer space and "
+            "the random value above the threashold is treated as infinite (pruned). "
+            "Any value below 1.0 makes the algorithm incomplete.",
+            "1.0",
+            Bounds("0.0", "1.0"));
         Options opts = parser.parse();
 
         if (parser.dry_run())
