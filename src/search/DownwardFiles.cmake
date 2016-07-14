@@ -150,6 +150,14 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+    NAME NOVELTY
+    HELP "The novelty metric by Lipovetzky"
+    SOURCES
+        heuristics/novelty.cc
+)
+
+
+fast_downward_plugin(
     NAME G_EVALUATOR
     HELP "The g-evaluator"
     SOURCES
