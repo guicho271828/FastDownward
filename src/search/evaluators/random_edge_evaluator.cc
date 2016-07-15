@@ -26,21 +26,21 @@ namespace RandomEdgeEvaluator {
         auto current = ctx.get_state();
         int &state_value = state_db[current];
         if (state_value < 0){
-            state_value = g_rng.next32();
+            state_value = g_rng(std::numeric_limits<int>::max());
         }
         auto op = ctx.get_space()->search_node_infos[current].creating_operator;
 
         auto it = edge_db.find(op);
         int edge_value;
         if (it == edge_db.end()){
-            edge_value = g_rng.next32();
+            edge_value = g_rng(std::numeric_limits<int>::max());
             edge_db[op] = edge_value;
         }else{
             edge_value = it->second;
         }
 
-        int value = state_value ^ edge_value;
-
+        int value = abs(state_value ^ edge_value);
+        
         if (value > bound){
             value = EvaluationResult::INFTY;
         }
