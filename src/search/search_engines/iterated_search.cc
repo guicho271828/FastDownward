@@ -47,7 +47,9 @@ SearchEngine *IteratedSearch::create_phase(int p) {
            we might not actually have right now, but strive for). So
            this overrides continue_on_fail.
         */
-        if (repeat_last_phase && last_phase_found_solution) {
+        if (repeat_last_phase // && last_phase_found_solution
+            // original version assumes determinism, but I don't. Masataro Asai
+            ) {
             return get_search_engine(engine_configs.size() - 1);
         } else {
             return nullptr;
