@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <limits>
+#include <cassert>
 using namespace std;
 
 namespace RandomHeuristics {
@@ -27,7 +28,8 @@ void RandomHeuristics::initialize() {
 int RandomHeuristics::compute_heuristic(const GlobalState &global_state) {
     int &var = db[global_state];
     if (var < 0){
-        var = g_rng.next32();
+        var = g_rng(std::numeric_limits<int>::max());
+        assert(var > 0);
         if (var > bound){
             var = EvaluationResult::INFTY;
         }
