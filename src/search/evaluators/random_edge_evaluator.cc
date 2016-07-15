@@ -10,13 +10,6 @@
 #include <cassert>
 using namespace std;
 
-
-// GlobalState current_state = goal_state;
-// assert(path.empty());
-// for (;;) {
-//     const SearchNodeInfo &info = search_node_infos[current_state];
-// const GlobalOperator *op = info.creating_operator;
-
 namespace RandomEdgeEvaluator {
     RandomEdgeEvaluator::RandomEdgeEvaluator(const Options &opts) :
         ScalarEvaluator(), state_db(-1),
