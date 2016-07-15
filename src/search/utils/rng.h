@@ -1,3 +1,4 @@
+/* -*- mode : c++ -*- */
 #ifndef UTILS_RNG_H
 #define UTILS_RNG_H
 
