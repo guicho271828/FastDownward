@@ -191,6 +191,12 @@ fast_downward_plugin(
     SOURCES
         evaluators/weighted_evaluator.cc
 )
+fast_downward_plugin(
+    NAME MOD_EVALUATOR
+    HELP "The mod evaluator"
+    SOURCES
+        evaluators/mod_evaluator.cc
+)
 
 fast_downward_plugin(
     NAME SUM_EVALUATOR
