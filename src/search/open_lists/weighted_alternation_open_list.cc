@@ -22,7 +22,7 @@ template<class Entry>
 class WeightedAlternationOpenList : public AlternationOpenList<Entry> {
     vector<int> priorities;
     vector<int> weights;
-    int counter;
+    unsigned int counter;
 protected:
     // std::vector<std::unique_ptr<OpenList<Entry>>> open_lists;
     // const int boost_amount;
