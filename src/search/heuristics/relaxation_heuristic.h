@@ -21,6 +21,7 @@ struct UnaryOperator {
     int base_cost;
 
     int unsatisfied_preconditions;
+    /* temporary cost storage used for RPG exploration. */
     int cost; // Used for h^max cost or h^add cost;
               // includes operator cost (base_cost)
     UnaryOperator(const std::vector<Proposition *> &pre, Proposition *eff,
@@ -34,6 +35,7 @@ struct Proposition {
     int id;
     std::vector<UnaryOperator *> precondition_of;
 
+    /* temporary cost storage used for RPG exploration. */
     int cost; // Used for h^max cost or h^add cost
     UnaryOperator *reached_by;
     bool marked; // used when computing preferred operators for h^add and h^FF
