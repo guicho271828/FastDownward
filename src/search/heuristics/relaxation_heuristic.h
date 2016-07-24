@@ -54,6 +54,9 @@ protected:
     std::vector<UnaryOperator> unary_operators;
     std::vector<std::vector<Proposition>> propositions;
     std::vector<Proposition *> goal_propositions;
+    /* task used for exploration ; different from task used for summing up the cost */
+    const std::shared_ptr<AbstractTask> task_for_exploration;
+    TaskProxy task_proxy_for_exploration;
 
     Proposition *get_proposition(const FactProxy &fact);
     virtual void initialize();
@@ -63,6 +66,7 @@ public:
     virtual ~RelaxationHeuristic();
     virtual bool dead_ends_are_reliable() const;
 };
+void add_cost_type_option_for_exploration(OptionParser &parser);
 }
 
 #endif

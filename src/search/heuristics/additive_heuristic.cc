@@ -159,6 +159,7 @@ static Heuristic *_parse(OptionParser &parser) {
     parser.document_property("preferred operators", "yes");
 
     Heuristic::add_options_to_parser(parser);
+    RelaxationHeuristic::add_cost_type_option_for_exploration(parser);
     Options opts = parser.parse();
     if (parser.dry_run())
         return 0;
