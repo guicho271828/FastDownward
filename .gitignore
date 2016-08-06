@@ -9,3 +9,5 @@ builds/
 /sas_plan.2
 /src/search/GPATH
 /src/search/GSYMS
+/misc/tests/output
+/misc/tests/output.sas
