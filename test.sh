@@ -17,9 +17,9 @@ with-dir (){
 # CC=clang CXX=clang cmake ../../src
 # CC=clang CXX=clang make
 
-./cgroup-setup.sh
+# ./cgroup-setup.sh
 
 ./build.py &
 ./build.py --debug &
 
-wait && cgexec -g memory:$(whoami)/ misc/tests/run-all-code-tests
+wait && misc/tests/run-all-code-tests
