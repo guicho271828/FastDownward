@@ -47,6 +47,7 @@ set(CORE_SOURCES
         task_tools.cc
         variable_order_finder.cc
 
+        open_lists/layered_open_list.cc
         open_lists/alternation_open_list.cc
         open_lists/weighted_alternation_open_list.cc
         open_lists/bucket_open_list.cc
