@@ -162,6 +162,7 @@ fast_downward_plugin(
     SOURCES
         evaluators/depth_evaluator.cc
         evaluators/width_evaluator.cc
+        evaluators/pwidth_evaluator.cc
 )
 
 fast_downward_plugin(
