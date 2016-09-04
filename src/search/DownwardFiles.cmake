@@ -161,6 +161,7 @@ fast_downward_plugin(
     HELP "The depth-evaluator"
     SOURCES
         evaluators/depth_evaluator.cc
+        evaluators/width_evaluator.cc
 )
 
 fast_downward_plugin(
