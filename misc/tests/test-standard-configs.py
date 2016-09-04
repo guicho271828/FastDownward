@@ -15,6 +15,9 @@ BENCHMARKS_DIR = os.path.join(REPO, "benchmarks")
 FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
+    "visitall-sat11-strips/problem20.pddl",
+    "transport-sat11-strips/p03.pddl",
+    "woodworking-sat11-strips/p03.pddl",
     "miconic/s1-0.pddl",
     "miconic/s10-0.pddl",
     "airport-adl/p01-airport1-p1.pddl",
@@ -23,13 +26,14 @@ TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
     "openstacks-opt08-strips/p01.pddl",
     "driverlog/pfile1",
     "parking-opt11-strips/pfile03-011.pddl",
+    "driverlog/pfile1",
 ]]
 
 CONFIGS = {}
-CONFIGS.update(configs.default_configs_optimal(core=True, ipc=True, extended=True))
-CONFIGS.update(configs.default_configs_satisficing(core=True, ipc=True, extended=True))
-CONFIGS.update(configs.task_transformation_test_configs())
-CONFIGS.update(configs.regression_test_configs())
+# CONFIGS.update(configs.default_configs_optimal(core=False, ipc=False, extended=False))
+CONFIGS.update(configs.default_configs_satisficing(core=False, ipc=False, extended=True))
+# CONFIGS.update(configs.task_transformation_test_configs())
+# CONFIGS.update(configs.regression_test_configs())
 
 if os.name == "nt":
     # No support for portfolios on Windows
@@ -71,7 +75,7 @@ def main():
         subprocess.check_call(cmd, cwd=REPO)
     for task in TASKS:
         for nick, config in CONFIGS.items():
-            for debug in [True, False]:
+            for debug in [False]:
                 try:
                     run_plan_script(task, nick, config, debug)
                 except subprocess.CalledProcessError:

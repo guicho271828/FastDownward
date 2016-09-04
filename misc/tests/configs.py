@@ -155,183 +155,47 @@ def configs_optimal_extended():
 
 def configs_satisficing_extended():
     return {
-        # eager greedy
-        "eager_greedy_alt_ff_cg": [
-            "--heuristic",
-            "hff=ff()",
-            "--heuristic",
-            "hcg=cg()",
-            "--search",
-            "eager_greedy(hff,hcg,preferred=[hff,hcg])"],
-        "eager_greedy_ff_no_pref": [
-            "--search",
-            "eager_greedy(ff())"],
-        # lazy greedy
-        "lazy_greedy_alt_cea_cg": [
-            "--heuristic",
-            "hcea=cea()",
-            "--heuristic",
-            "hcg=cg()",
-            "--search",
-            "lazy_greedy(hcea,hcg,preferred=[hcea,hcg])"],
-        "lazy_greedy_ff_no_pref": [
-            "--search",
-            "lazy_greedy(ff())"],
-        "lazy_greedy_cea": [
-            "--heuristic",
-            "h=cea()",
-            "--search",
-            "lazy_greedy(h, preferred=h)"],
-        # lazy wA*
-        "lazy_wa3_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "lazy_wastar(h,w=3,preferred=h)"],
-        # eager wA*
-        "eager_wa3_cg": [
-            "--heuristic",
-            "h=cg()",
-            "--search",
-            "eager(single(sum([g(),weight(h,3)])),preferred=h)"],
-        # ehc
-        # "ehc_ff": [
-        #     "--search",
-        #     "ehc(ff())"],
-        # iterated
-        "iterated_wa_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "iterated([lazy_wastar(h,w=10), lazy_wastar(h,w=5), lazy_wastar(h,w=3),"
-            "lazy_wastar(h,w=2), lazy_wastar(h,w=1)])"],
-        # pareto open list
-        "pareto_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "eager(pareto([sum([g(), h]), h]), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        # bucket-based open list
-        "bucket_lmcut": [
-            "--heuristic",
-            "h=lmcut()",
-            "--search",
-            "eager(single_buckets(h), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        # epsilon-greedy
-        "egreedy_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "eager(epsilon_greedy([h]), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "epsilon_greedy_ff_FIFO": [
-            "--heuristic", "h=ff()",
-            "--search", "eager(epsilon_greedy([h],queue_type=FIFO), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "epsilon_greedy_ff_RANDOM": [
-            "--heuristic", "h=ff()",
-            "--search", "eager(epsilon_greedy([h],queue_type=RANDOM), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "epsilon_greedy_ff_LIFO": [
-            "--heuristic", "h=ff()",
-            "--search", "eager(epsilon_greedy([h],queue_type=LIFO), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        # typebased
-        "typebased_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "eager(alt([single(h),type_based([g(),h])]), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"
-        ],
-        "type_based_ff_FIFO": [
-            "--heuristic", "h=ff()",
-            "--search",
-            
-            "eager(alt([single(h),type_based([g(), h],queue_type=FIFO)]),"
-            "reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "type_based_ff_RANDOM": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt([single(h),type_based([g(), h],queue_type=RANDOM)]),"
-            "reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "type_based_ff_LIFO": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt([single(h),type_based([g(), h],queue_type=LIFO)]),"
-            "reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        # simulate typebased with typed_tiebreaking
-        "typed_tiebreaking_ff_simulate_typebased": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt(["
-            "single(h),"
-            "typed_tiebreaking([],[g(),h])"
-            "]),"
-            " reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "typed_tiebreaking_ff_simulate_typebased_deterministic": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt(["
-            "single(h),"
-            "typed_tiebreaking([],[g(),h],stochastic=false)"
-            "]),"
-            "reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
         "td": [
-            "--heuristic", "h=ff()",
-            "--search",
+            "--heuristic", "h=ff()", "--search",
+            "eager("
+            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "reopen_closed=true,f_eval=h)"],
+        "tw": [
+            "--heuristic", "h=ff()", "--search",
+            "eager("
+            "typed_tiebreaking([h],[width()],stochastic=false),"
+            "reopen_closed=true,f_eval=h)"],
+        "tdw": [
+            "--heuristic", "h=ff()", "--search",
+            "eager("
+            "typed_tiebreaking([h],[depth([h]),width()],stochastic=false),"
+            "reopen_closed=true,f_eval=h)"],
+        "tb": [
+            "--heuristic", "h=ff()", "--search",
+            "eager("
+            "tiebreaking([h,random_edge()]),"
+            "reopen_closed=true,f_eval=h)"],
+        "tB": [
+            "--heuristic", "h=ff()", "--search",
             "eager(alt(["
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
-            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
+            "single(h),"
+            "single(random_edge())"
             "]),"
-            " reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "td2": [
-            "--heuristic", "h=ff()",
-            "--search",
+            "reopen_closed=true,f_eval=h)"],
+        "tD": [
+            "--heuristic", "h=ff()", "--search",
             "eager(alt(["
-            "typed_tiebreaking([h],[depth([h])]),"
-            "typed_tiebreaking([],[g(),h,depth([h])])"
+            "single(h),"
+            "type_based([g(),h])"
             "]),"
-            " reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "td3": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt([type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
-        "td4": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(alt([single(h),type_based([g(),h,depth([h])])]),f_eval=sum([g(), h]))"],
-        "td-lazy": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "lazy(alt(["
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
-            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
-            "]))"],
-        "walt": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(walt(["
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
-            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false)"
-            "],weights=[2,1]))"],
-        "walt2": [
-            "--heuristic", "h=ff()",
-            "--search",
-            "eager(walt(["
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
-            "typed_tiebreaking([],[g(),h,depth([h])],stochastic=false),"
-            "typed_tiebreaking([h],[depth([h])],stochastic=false,pref_only=true),"
-            "],weights=[2,1],boost=1000),preferred=[h])"],
+            "reopen_closed=true,f_eval=h)"],
+        "tDW": [
+            "--heuristic", "h=ff()", "--search",
+            "eager(alt(["
+            "single(h),"
+            "type_based([g(),h,width()])"
+            "]),"
+            "reopen_closed=true,f_eval=h)"],
     }
 
 
