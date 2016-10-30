@@ -23,7 +23,9 @@ SearchEngine::SearchEngine(const Options &opts)
       solution_found(false),
       search_space(OperatorCost(opts.get_enum("cost_type"))),
       cost_type(OperatorCost(opts.get_enum("cost_type"))),
-      max_time(opts.get<double>("max_time")) {
+      max_time(opts.get<double>("max_time")),
+      max_expansion(opts.get<int>("max_expansion"))
+{
     if (opts.get<int>("bound") < 0) {
         cerr << "error: negative cost bound " << opts.get<int>("bound") << endl;
         Utils::exit_with(ExitCode::INPUT_ERROR);
@@ -65,6 +67,11 @@ void SearchEngine::search() {
             status = TIMEOUT;
             break;
         }
+        if (statistics.get_expanded() >= max_expansion) {
+            cout << "Expansion limit reached. Abort search." << endl;
+            status = TIMEOUT;
+            break;
+        }
     }
     cout << "Actual search time: " << timer
          << " [t=" << Utils::g_timer << "]" << endl;
@@ -96,6 +103,9 @@ void SearchEngine::add_options_to_parser(OptionParser &parser) {
         "bound",
         "exclusive depth bound on g-values. Cutoffs are always performed according to "
         "the real cost, regardless of the cost_type parameter", "infinity");
+    parser.add_option<int>("max_expansion",
+                              "max expansion", to_string(numeric_limits<int>::max()));
+
     parser.add_option<double>(
         "max_time",
         "maximum time in seconds the search is allowed to run for. The "

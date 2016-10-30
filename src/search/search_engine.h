@@ -29,6 +29,7 @@ protected:
     int bound;
     OperatorCost cost_type;
     double max_time;
+    int max_expansion;
 
     virtual void initialize() {}
     virtual SearchStatus step() = 0;
