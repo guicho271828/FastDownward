@@ -6,3 +6,8 @@
 const CausalGraph &TaskProxy::get_causal_graph() const {
     return ::get_causal_graph(task);
 }
+
+std::ostream &std::operator<<(std::ostream &stream, const FactProxy &f) {
+    stream << "[" << f.var_id << " " << f.value << "]";
+    return stream;
+}

@@ -285,6 +285,7 @@ fast_downward_plugin(
     HELP "The 'blind search' heuristic"
     SOURCES
         heuristics/blind_search_heuristic.cc
+        heuristics/novelty_heuristic.cc
 )
 
 fast_downward_plugin(

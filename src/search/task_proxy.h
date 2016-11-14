@@ -11,6 +11,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <ostream>
 
 
 class AxiomsProxy;
@@ -127,11 +128,11 @@ inline ProxyIterator<ProxyCollection> end(ProxyCollection &collection) {
 
 class FactProxy {
     const AbstractTask *task;
-    int var_id;
-    int value;
 public:
     FactProxy(const AbstractTask &task, int var_id, int value);
     ~FactProxy() = default;
+    int var_id;
+    int value;
 
     VariableProxy get_variable() const;
 
@@ -158,6 +159,19 @@ public:
         return task->are_facts_mutex(fact1, fact2);
     }
 };
+
+namespace std {
+template <>
+struct hash<FactProxy> {
+    size_t operator()(const FactProxy &fp) const {
+        size_t hash = 0;
+        Utils::hash_combine(hash, fp.var_id);
+        Utils::hash_combine(hash, fp.value);
+        return hash;
+    }
+};
+ostream &operator<<(ostream &stream, const FactProxy &f);
+}
 
 
 class FactsProxyIterator {
