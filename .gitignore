@@ -7,3 +7,7 @@ builds/
 /output.sas
 /sas_plan.1
 /sas_plan.2
+/src/search/GPATH
+/src/search/GSYMS
+/misc/tests/output
+/misc/tests/output.sas
