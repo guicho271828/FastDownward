@@ -1,113 +1,3 @@
-def configs_optimal_core():
-    return {
-        # A*
-        "help": ["--help"],
-        "astar_blind": [
-            "--search",
-            "astar(blind)"],
-        "astar_h2": [
-            "--search",
-            "astar(hm(2))"],
-        "astar_ipdb": [
-            "--search",
-            "astar(ipdb)"],
-        "astar_lmcount_lm_merged_rhw_hm": [
-            "--search",
-            "astar(lmcount(lm_merged([lm_rhw(),lm_hm(m=1)]),admissible=true),mpd=true)"],
-        "astar_lmcut": [
-            "--search",
-            "astar(lmcut)"],
-        "astar_hmax": [
-            "--search",
-            "astar(hmax)"],
-        "astar_merge_and_shrink_rl_fh": [
-            "--search",
-            "astar(merge_and_shrink("
-            "merge_strategy=merge_linear(variable_order=reverse_level),"
-            "shrink_strategy=shrink_fh(max_states=50000),"
-            "label_reduction=exact(before_shrinking=false,"
-            "before_merging=true)))"],
-        "astar_merge_and_shrink_dfp_bisim": [
-            "--search",
-            "astar(merge_and_shrink(merge_strategy=merge_dfp,"
-            "shrink_strategy=shrink_bisimulation(max_states=50000,threshold=1,"
-            "greedy=false),"
-            "label_reduction=exact(before_shrinking=true,"
-            "before_merging=false)))"],
-        "astar_merge_and_shrink_dfp_greedy_bisim": [
-            "--search",
-            "astar(merge_and_shrink(merge_strategy=merge_dfp,"
-            "shrink_strategy=shrink_bisimulation(max_states=infinity,threshold=1,"
-            "greedy=true),"
-            "label_reduction=exact(before_shrinking=true,"
-            "before_merging=false)))"],
-    }
-
-MERGE_AND_SHRINK = ('astar(merge_and_shrink('
-    'merge_strategy=merge_dfp,'
-        'shrink_strategy=shrink_bisimulation('
-         'max_states=50000,'
-        'threshold=1,'
-        'greedy=false),'
-    'label_reduction=exact('
-        'before_shrinking=true,'
-        'before_merging=false)'
-'))')
-
-
-def configs_satisficing_core():
-    return {
-        # A*
-        "astar_goalcount": [
-            "--search",
-            "astar(goalcount)"],
-        # eager greedy
-        "eager_greedy_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "eager_greedy(h, preferred=h)"],
-        "eager_greedy_add": [
-            "--heuristic",
-            "h=add()",
-            "--search",
-            "eager_greedy(h, preferred=h)"],
-        "eager_greedy_cg": [
-            "--heuristic",
-            "h=cg()",
-            "--search",
-            "eager_greedy(h, preferred=h)"],
-        "eager_greedy_cea": [
-            "--heuristic",
-            "h=cea()",
-            "--search",
-            "eager_greedy(h, preferred=h)"],
-        # lazy greedy
-        "lazy_greedy_ff": [
-            "--heuristic",
-            "h=ff()",
-            "--search",
-            "lazy_greedy(h, preferred=h)"],
-        "lazy_greedy_add": [
-            "--heuristic",
-            "h=add()",
-            "--search",
-            "lazy_greedy(h, preferred=h)"],
-        "lazy_greedy_cg": [
-            "--heuristic",
-            "h=cg()",
-            "--search",
-            "lazy_greedy(h, preferred=h)"],
-    }
-
-
-def configs_optimal_ipc():
-    return {
-        "seq_opt_merge_and_shrink": ["--alias", "seq-opt-merge-and-shrink"],
-        "seq_opt_fdss_1": ["--alias", "seq-opt-fdss-1"],
-        "seq_opt_fdss_2": ["--alias", "seq-opt-fdss-2"],
-    }
-
 
 def configs_satisficing_ipc():
     return {
@@ -116,86 +6,55 @@ def configs_satisficing_ipc():
         "seq_sat_fdss_2": ["--alias", "seq-sat-fdss-2"],
     }
 
-
-def configs_optimal_extended():
-    return {
-        # A*
-        "astar_lmcount_lm_merged_rhw_hm_no_order": [
-            "--search",
-            "astar(lmcount(lm_merged([lm_rhw(),lm_hm(m=1)]),admissible=true),mpd=true)"],
-        # different last-resort
-        "tiebreaking_lmcut": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(tiebreaking([sum([g(), h]), h]), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "tiebreaking_lmcut_FIFO": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=FIFO), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "tiebreaking_lmcut_RANDOM": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=RANDOM), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "tiebreaking_lmcut_LIFO": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(tiebreaking([sum([g(), h]), h],queue_type=LIFO), reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "typed_tiebreaking_lmcut_RandomDepth_RandomOrder": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(typed_tiebreaking([sum([g(), h]), h],[depth([sum([g(), h]), h])],queue_type=RANDOM),"
-            " reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-        "typed_tiebreaking_lmcut_RandomDepth_RandomOrder": [
-            "--heuristic", "h=lmcut()",
-            "--search", "eager(typed_tiebreaking([sum([g(), h]), h],[depth([sum([g(), h]), h])],queue_type=RANDOM,stochastic=false),"
-            " reopen_closed=true,"
-            "f_eval=sum([g(), h]))"],
-    }
-
-
 def configs_satisficing_extended():
     return {
-        "td": [
+        "h": [
             "--heuristic", "h=ff()", "--search",
             "eager("
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "tiebreaking([h]),"
             "reopen_closed=true,f_eval=h)"],
-        "tw": [
-            "--heuristic", "h=ff()", "--search",
+        "n1h": [
+            "--heuristic", "h=ff()",
+            "--heuristic", "n=novelty([],1)",
+            "--search",
             "eager("
-            "typed_tiebreaking([h],[width()],stochastic=false),"
-            "reopen_closed=true,f_eval=h)"],
-        "tdw": [
-            "--heuristic", "h=ff()", "--search",
+            "tiebreaking([n,h]),"
+            "reopen_closed=true)"],
+        "n2h": [
+            "--heuristic", "h=ff()",
+            "--heuristic", "n=novelty([],2)",
+            "--search",
             "eager("
-            "typed_tiebreaking([h],[depth([h]),width()],stochastic=false),"
-            "reopen_closed=true,f_eval=h)"],
-        "tb": [
-            "--heuristic", "h=ff()", "--search",
-            "eager("
-            "tiebreaking([h,random_edge()]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tB": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "single(random_edge())"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tD": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "type_based([g(),h])"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tDW": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "type_based([g(),h,width()])"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
+            "tiebreaking([n,h]),"
+            "reopen_closed=true)"],
+        # "n3h": [
+        #     "--heuristic", "h=ff()",
+        #     "--heuristic", "n=novelty([],3)",
+        #     "--search",
+        #     "eager("
+        #     "tiebreaking([n,h]),"
+        #     "reopen_closed=true)"],
+        # "hn1": [
+        #     "--heuristic", "h=ff()",
+        #     "--heuristic", "n=novelty([h],1)"
+        #     "--search",
+        #     "eager("
+        #     "tiebreaking([h,n]),"
+        #     "reopen_closed=true)"],
+        # "hn2": [
+        #     "--heuristic", "h=ff()",
+        #     "--heuristic", "n=novelty([h],2)"
+        #     "--search",
+        #     "eager("
+        #     "tiebreaking([h,n]),"
+        #     "reopen_closed=true)"],
+        # "hn3": [
+        #     "--heuristic", "h=ff()",
+        #     "--heuristic", "n=novelty([h],3)"
+        #     "--search",
+        #     "eager("
+        #     "tiebreaking([h,n]),"
+        #     "reopen_closed=true)"],
     }
 
 

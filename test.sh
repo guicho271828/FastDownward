@@ -19,7 +19,7 @@ with-dir (){
 
 # ./cgroup-setup.sh
 
-./build.py &
-./build.py --debug &
+# ./build.py --debug &
 
-wait && misc/tests/run-all-code-tests
+./build.py downward && misc/tests/run-all-code-tests |
+        awk '{};/Run:|Evaluated|Actual search|Task:/{print $0}'

@@ -15,8 +15,8 @@ BENCHMARKS_DIR = os.path.join(REPO, "benchmarks")
 FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
-    "visitall-sat11-strips/problem20.pddl",
-    "transport-sat11-strips/p03.pddl",
+    "visitall-sat11-strips/problem12.pddl",
+    "transport-sat11-strips/p01.pddl",
     "woodworking-sat11-strips/p03.pddl",
     "miconic/s1-0.pddl",
     "miconic/s10-0.pddl",
@@ -55,7 +55,7 @@ def run_plan_script(task, nick, config, debug):
         cmd += config + [task]
     else:
         cmd += [task] + config
-    print("\nRun {}:".format(cmd))
+    print("\nRun: {}".format(nick))
     sys.stdout.flush()
     subprocess.check_call(cmd)
 
@@ -69,11 +69,8 @@ def main():
     # Since we want this script to work even when we are in a regular
     # shell, we do not build on Windows. If the planner is not yet built,
     # the driver script will complain about this.
-    if os.name == "posix":
-        jobs = multiprocessing.cpu_count()
-        cmd = ["./build.py", "release32", "debug32", "-j{}".format(jobs)]
-        subprocess.check_call(cmd, cwd=REPO)
     for task in TASKS:
+        print("\nTask: {}".format(task))
         for nick, config in CONFIGS.items():
             for debug in [False]:
                 try:
