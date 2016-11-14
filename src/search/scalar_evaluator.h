@@ -1,3 +1,4 @@
+/* -*- mode : c++ -*- */
 #ifndef SCALAR_EVALUATOR_H
 #define SCALAR_EVALUATOR_H
 
