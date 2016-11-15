@@ -69,10 +69,6 @@ def main():
     # Since we want this script to work even when we are in a regular
     # shell, we do not build on Windows. If the planner is not yet built,
     # the driver script will complain about this.
-    if os.name == "posix":
-        jobs = multiprocessing.cpu_count()
-        cmd = ["./build.py", "release32", "debug32", "-j{}".format(jobs)]
-        subprocess.check_call(cmd, cwd=REPO)
     for task in TASKS:
         for nick, config in CONFIGS.items():
             for debug in [False]:
