@@ -3,6 +3,7 @@
 
 #include "../scalar_evaluator.h"
 #include <vector>
+#include <unordered_map>
 #include "../per_state_information.h"
 #include "../global_state.h"
 
@@ -20,12 +21,14 @@ namespace DepthEvaluator {
             int depth;
         };
         PerStateInformation<depthinfo> db;
+        bool record;
+        std::unordered_map<Key,int> counter;
         int depth(EvaluationContext &eval_context);
         Key key(EvaluationContext &eval_context);
 
     public:
         explicit DepthEvaluator(const Options &opts);
-        virtual ~DepthEvaluator() override = default;
+        virtual ~DepthEvaluator() override;
 
         virtual EvaluationResult compute_result(
             EvaluationContext &eval_context) override;

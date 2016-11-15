@@ -104,7 +104,11 @@ protected:
                               const Entry &entry) override;
 public:
     explicit TypedTiebreakingOpenList(const Options &opts);
-    virtual ~TypedTiebreakingOpenList() override = default;
+    virtual ~TypedTiebreakingOpenList() override {
+        for (auto e : type_evaluators){
+            delete e;
+        }
+    };
 
     virtual Entry remove_min(std::vector<int> *key = nullptr) override;
     virtual bool is_dead_end(

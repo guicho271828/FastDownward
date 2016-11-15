@@ -5,16 +5,31 @@
 #include "../search_space.h"
 #include "../plugin.h"
 #include "../global_state.h"
+#include "../utils/logging.h"
+#include <iostream>
 
 #include <vector>
 #include <cassert>
 
 
 namespace DepthEvaluator {
+    using namespace std;
     DepthEvaluator::DepthEvaluator(const Options &opts)
-        : subevaluators(opts.get_list<ScalarEvaluator *>("evals")) {
+        : subevaluators(opts.get_list<ScalarEvaluator *>("evals")),
+          record(opts.get<bool>("record")){
     }
 
+    DepthEvaluator::~DepthEvaluator()
+    {
+        // map<Key,int> counter;
+        // for (auto it = db.begin(g_state_registry); it!= db.end(g_state_registry); it++){
+        //     convert_
+        //     counter[i.key]++;
+        // }
+        
+        cout << ":DEPTH " << counter << endl;
+    }
+    
     Key DepthEvaluator::key(EvaluationContext &eval_context){
         Key values;
         values.reserve(subevaluators.size());
@@ -33,6 +48,10 @@ namespace DepthEvaluator {
             info.initialized = true;
             info.key = key(ctx);
             info.depth = depth(ctx);
+            if (record){
+                counter[info.key]++;
+                // cout << counter << endl;
+            }
         }
         
         result.set_h_value(info.depth);
@@ -67,6 +86,7 @@ namespace DepthEvaluator {
 
         parser.add_list_option<ScalarEvaluator *>("evals",
                                                   "at least one scalar evaluator");
+        parser.add_option<bool>("record", "record the depth", "false");
         Options opts = parser.parse();
 
         opts.verify_list_non_empty<ScalarEvaluator *>("evals");

@@ -36,7 +36,9 @@ protected:
 
 public:
     explicit EagerSearch(const Options &opts);
-    virtual ~EagerSearch() = default;
+    virtual ~EagerSearch() {
+        delete f_evaluator;
+    };
 
     virtual void print_statistics() const override;
 

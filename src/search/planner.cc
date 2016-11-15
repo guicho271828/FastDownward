@@ -48,8 +48,10 @@ int main(int argc, const char **argv) {
     cout << "Total time: " << Utils::g_timer << endl;
 
     if (engine->found_solution()) {
+        delete engine;
         Utils::exit_with(ExitCode::PLAN_FOUND);
     } else {
+        delete engine;
         Utils::exit_with(ExitCode::UNSOLVED_INCOMPLETE);
     }
 }
