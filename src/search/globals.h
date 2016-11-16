@@ -15,6 +15,7 @@ class GlobalState;
 class IntPacker;
 class StateRegistry;
 class SuccessorGenerator;
+class SearchEngine;
 
 namespace Utils {
 struct Log;
@@ -44,6 +45,8 @@ void verify_no_axioms_no_conditional_effects();
 void check_magic(std::istream &in, std::string magic);
 
 bool are_mutex(const std::pair<int, int> &a, const std::pair<int, int> &b);
+
+extern SearchEngine *g_engine;
 
 extern bool g_use_metric;
 extern int g_min_action_cost;

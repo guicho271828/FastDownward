@@ -3,6 +3,7 @@
 
 #include "utils/timer.h"
 #include "utils/system.h"
+#include "globals.h"
 
 #include <iostream>
 
@@ -20,14 +21,12 @@ int main(int argc, const char **argv) {
     if (string(argv[1]).compare("--help") != 0)
         read_everything(cin);
 
-    SearchEngine *engine = 0;
-
     // The command line is parsed twice: once in dry-run mode, to
     // check for simple input errors, and then in normal mode.
     bool unit_cost = is_unit_cost();
     try {
         OptionParser::parse_cmd_line(argc, argv, true, unit_cost);
-        engine = OptionParser::parse_cmd_line(argc, argv, false, unit_cost);
+        g_engine = OptionParser::parse_cmd_line(argc, argv, false, unit_cost);
     } catch (ArgError &error) {
         cerr << error << endl;
         OptionParser::usage(argv[0]);
@@ -38,20 +37,18 @@ int main(int argc, const char **argv) {
     }
 
     Utils::Timer search_timer;
-    engine->search();
+    g_engine->search();
     search_timer.stop();
     Utils::g_timer.stop();
 
-    engine->save_plan_if_necessary();
-    engine->print_statistics();
+    g_engine->save_plan_if_necessary();
+    g_engine->print_statistics();
     cout << "Search time: " << search_timer << endl;
     cout << "Total time: " << Utils::g_timer << endl;
 
-    if (engine->found_solution()) {
-        delete engine;
+    if (g_engine->found_solution()) {
         Utils::exit_with(ExitCode::PLAN_FOUND);
     } else {
-        delete engine;
         Utils::exit_with(ExitCode::UNSOLVED_INCOMPLETE);
     }
 }

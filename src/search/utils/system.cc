@@ -1,5 +1,6 @@
 #include "system.h"
-
+#include "../globals.h"
+#include "../search_engine.h"
 
 namespace Utils {
 const char *get_exit_code_message_reentrant(ExitCode exitcode) {
@@ -39,6 +40,7 @@ bool is_exit_code_error_reentrant(ExitCode exitcode) {
 }
 
 void exit_with(ExitCode exitcode) {
+    delete g_engine;
     report_exit_code_reentrant(exitcode);
     exit(static_cast<int>(exitcode));
 }

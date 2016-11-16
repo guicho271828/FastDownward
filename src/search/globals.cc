@@ -371,6 +371,7 @@ const shared_ptr<AbstractTask> g_root_task() {
     return root_task;
 }
 
+SearchEngine *g_engine = 0;
 bool g_use_metric;
 int g_min_action_cost = numeric_limits<int>::max();
 int g_max_action_cost = 0;
