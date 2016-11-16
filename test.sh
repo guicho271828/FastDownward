@@ -1,5 +1,11 @@
 #!/bin/bash
 
+handle(){
+    pkill -g 0
+}
+
+trap "handle" SIGINT EXIT
+
 with-dir (){
     mkdir -p $1
     pushd $1
