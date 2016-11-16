@@ -49,7 +49,7 @@ namespace DepthEvaluator {
             info.key = key(ctx);
             info.depth = depth(ctx);
             if (record){
-                counter[info.key]++;
+                counter[info.key][info.depth]++;
                 // cout << counter << endl;
             }
         }

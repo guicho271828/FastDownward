@@ -22,7 +22,7 @@ namespace DepthEvaluator {
         };
         PerStateInformation<depthinfo> db;
         bool record;
-        std::unordered_map<Key,int> counter;
+        std::unordered_map<Key,std::unordered_map<int,int> > counter;
         int depth(EvaluationContext &eval_context);
         Key key(EvaluationContext &eval_context);
 
