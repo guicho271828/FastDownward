@@ -9,6 +9,7 @@
 #include <deque>
 #include <vector>
 #include <set>
+#include <memory>
 
 /*
   Bucket-based implementation of an open list.
@@ -26,6 +27,7 @@ class FractalOpenList : public OpenList<Entry> {
     mutable int lowest_bucket;
     int size;
 
+    std::unique_ptr<OpenList<Entry>> sublist;
     ScalarEvaluator *evaluator;
 
 protected:

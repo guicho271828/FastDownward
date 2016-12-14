@@ -155,47 +155,26 @@ def configs_optimal_extended():
 
 def configs_satisficing_extended():
     return {
-        "td": [
+        "ts": [
             "--heuristic", "h=ff()", "--search",
             "eager("
-            "typed_tiebreaking([h],[depth([h])],stochastic=false),"
+            "tiebreaking([h,random()]),"
             "reopen_closed=true,f_eval=h)"],
-        "tw": [
+        "tr": [
             "--heuristic", "h=ff()", "--search",
             "eager("
-            "typed_tiebreaking([h],[width()],stochastic=false),"
+            "tiebreaking([h,random(memo=false)]),"
             "reopen_closed=true,f_eval=h)"],
-        "tdw": [
+        "ts1": [
             "--heuristic", "h=ff()", "--search",
             "eager("
-            "typed_tiebreaking([h],[depth([h]),width()],stochastic=false),"
-            "reopen_closed=true,f_eval=h)"],
-        "tb": [
+            "tiebreaking([h,random()]),"
+            "reopen_closed=false,f_eval=h)"],
+        "tr1": [
             "--heuristic", "h=ff()", "--search",
             "eager("
-            "tiebreaking([h,random_edge()]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tB": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "single(random_edge())"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tD": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "type_based([g(),h])"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
-        "tDW": [
-            "--heuristic", "h=ff()", "--search",
-            "eager(alt(["
-            "single(h),"
-            "type_based([g(),h,width()])"
-            "]),"
-            "reopen_closed=true,f_eval=h)"],
+            "tiebreaking([h,random(memo=false)]),"
+            "reopen_closed=false,f_eval=h)"],
     }
 
 
