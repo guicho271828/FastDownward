@@ -172,7 +172,7 @@ void generate_cpp_input(bool /*solvable_in_poly_time*/,
        since the planner doesn't handle it specially any more anyway. */
 
     ofstream outfile;
-    outfile.open("output", ios::out);
+    outfile.open("/dev/stdout", ios::out);
 
     outfile << "begin_version" << endl;
     outfile << PRE_FILE_VERSION << endl;
