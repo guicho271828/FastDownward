@@ -30,7 +30,7 @@ int main(int argc, const char **) {
     vector<DomainTransitionGraph> transition_graphs;
 
     if (argc != 1) {
-        cout << "*** do not perform relevance analysis ***" << endl;
+        cerr << "*** do not perform relevance analysis ***" << endl;
         g_do_not_prune_variables = true;
     }
 
@@ -39,7 +39,7 @@ int main(int argc, const char **) {
     //dump_preprocessed_problem_description
     //  (variables, initial_state, goals, operators, axioms);
 
-    cout << "Building causal graph..." << endl;
+    cerr << "Building causal graph..." << endl;
     CausalGraph causal_graph(variables, operators, axioms, goals);
     const vector<Variable *> &ordering = causal_graph.get_variable_ordering();
     bool cg_acyclic = causal_graph.is_acyclic();
@@ -50,7 +50,7 @@ int main(int argc, const char **) {
     strip_operators(operators);
     strip_axioms(axioms);
 
-    cout << "Building domain transition graphs..." << endl;
+    cerr << "Building domain transition graphs..." << endl;
     build_DTGs(ordering, operators, axioms, transition_graphs);
     //dump_DTGs(ordering, transition_graphs);
     bool solveable_in_poly_time = false;
@@ -68,8 +68,8 @@ int main(int argc, const char **) {
 
     //TODO: genauer machen? (highest level var muss nicht scc sein...gemacht)
     //nur Werte, die wichtig sind fuer drunterliegende vars muessen in scc sein
-    cout << "solveable in poly time " << solveable_in_poly_time << endl;
-    cout << "Building successor generator..." << endl;
+    cerr << "solveable in poly time " << solveable_in_poly_time << endl;
+    cerr << "Building successor generator..." << endl;
     SuccessorGenerator successor_generator(ordering, operators);
     //successor_generator.dump();
 
@@ -81,8 +81,8 @@ int main(int argc, const char **) {
         if (var->is_derived())
             derived_vars++;
     }
-    cout << "Preprocessor facts: " << facts << endl;
-    cout << "Preprocessor derived variables: " << derived_vars << endl;
+    cerr << "Preprocessor facts: " << facts << endl;
+    cerr << "Preprocessor derived variables: " << derived_vars << endl;
 
     // Calculate the problem size
     int task_size = ordering.size() + facts + goals.size();
@@ -96,12 +96,12 @@ int main(int argc, const char **) {
     for (const Axiom &axiom : axioms)
         task_size += axiom.get_encoding_size();
 
-    cout << "Preprocessor task size: " << task_size << endl;
+    cerr << "Preprocessor task size: " << task_size << endl;
 
-    cout << "Writing output..." << endl;
+    cerr << "Writing output..." << endl;
     generate_cpp_input(solveable_in_poly_time, ordering, metric,
                        mutexes, initial_state, goals,
                        operators, axioms, successor_generator,
                        transition_graphs, causal_graph);
-    cout << "done" << endl;
+    cerr << "done" << endl;
 }

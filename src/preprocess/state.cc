@@ -19,5 +19,5 @@ int State::operator[](Variable *var) const {
 
 void State::dump() const {
     for (const auto &value : values)
-        cout << "  " << value.first->get_name() << ": " << value.second << endl;
+        cerr << "  " << value.first->get_name() << ": " << value.second << endl;
 }

@@ -178,7 +178,7 @@ void build_DTGs(const vector<Variable *> &var_order,
                 }
             }
             //else
-            //cout <<"leave out var "<< var->get_name()<<" (unimportant) " << endl;
+            //cerr <<"leave out var "<< var->get_name()<<" (unimportant) " << endl;
         }
     }
     int num_axioms = axioms.size();
@@ -215,29 +215,29 @@ bool DomainTransitionGraph::is_strongly_connected() const {
         }
     }
     vector<vector<int>> sccs = SCC(easy_graph).get_result();
-    //  cout << "easy graph sccs for var " << level << endl;
+    //  cerr << "easy graph sccs for var " << level << endl;
 //   for(int i = 0; i < sccs.size(); i++) {
 //     for(int j = 0; j < sccs[i].size(); j++)
-//       cout << " " << sccs[i][j];
-//     cout << endl;
+//       cerr << " " << sccs[i][j];
+//     cerr << endl;
 //   }
     bool connected = false;
     if (sccs.size() == 1) {
         connected = true;
-        //cout <<"is strongly connected" << endl;
+        //cerr <<"is strongly connected" << endl;
     }
-    //else cout << "not strongly connected" << endl;
+    //else cerr << "not strongly connected" << endl;
     return connected;
 }
 void DomainTransitionGraph::dump() const {
-    cout << "Level: " << level << endl;
+    cerr << "Level: " << level << endl;
     int num_vertices = vertices.size();
     for (int i = 0; i < num_vertices; i++) {
-        cout << "  From value " << i << ":" << endl;
+        cerr << "  From value " << i << ":" << endl;
         for (const Transition &trans : vertices[i]) {
-            cout << "    " << "To value " << trans.target << endl;
+            cerr << "    " << "To value " << trans.target << endl;
             for (const auto &cond : trans.condition)
-                cout << "      if " << cond.first->get_name()
+                cerr << "      if " << cond.first->get_name()
                      << " = " << cond.second << endl;
         }
     }

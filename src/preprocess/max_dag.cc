@@ -8,11 +8,11 @@ vector<int> MaxDAG::get_result() {
     int num_nodes = weighted_graph.size();
     if (debug) {
         for (int i = 0; i < num_nodes; i++) {
-            cout << "From " << i << ":";
+            cerr << "From " << i << ":";
             for (const auto &trans : weighted_graph[i])
-                cout << " " << trans.first
+                cerr << " " << trans.first
                      << " [weight " << trans.second << "]";
-            cout << endl;
+            cerr << endl;
         }
     }
     vector<int> incoming_weights; // indexed by the graph's nodes
@@ -29,7 +29,7 @@ vector<int> MaxDAG::get_result() {
     multimap<int, int> heap;
     for (int node = 0; node < num_nodes; node++) {
         if (debug)
-            cout << "node " << node << " has " << incoming_weights[node] << " edges" << endl;
+            cerr << "node " << node << " has " << incoming_weights[node] << " edges" << endl;
         HeapPosition pos = heap.insert(make_pair(incoming_weights[node], node));
         heap_positions.push_back(pos);
     }
@@ -40,7 +40,7 @@ vector<int> MaxDAG::get_result() {
     // Recursively delete node with minimal weight of incoming edges.
     while (!heap.empty()) {
         if (debug)
-            cout << "minimal element is " << heap.begin()->second << endl;
+            cerr << "minimal element is " << heap.begin()->second << endl;
         int removed = heap.begin()->second;
         done[removed] = true;
         result.push_back(removed);
@@ -52,20 +52,20 @@ vector<int> MaxDAG::get_result() {
                 int arc_weight = succ.second;
                 while (arc_weight >= 100000)
                     arc_weight -= 100000;
-                //cout << "Looking at arc from " << removed << " to " << target << endl;
+                //cerr << "Looking at arc from " << removed << " to " << target << endl;
                 int new_weight = heap_positions[target]->first - arc_weight;
                 heap.erase(heap_positions[target]);
                 heap_positions[target] = heap.insert(make_pair(new_weight, target));
                 if (debug)
-                    cout << "node " << target << " has now " << new_weight << " edges " << endl;
+                    cerr << "node " << target << " has now " << new_weight << " edges " << endl;
             }
         }
     }
     if (debug) {
-        cout << "result: " << endl;
+        cerr << "result: " << endl;
         for (int r : result)
-            cout << r << " - ";
-        cout << endl;
+            cerr << r << " - ";
+        cerr << endl;
     }
     return result;
 }
@@ -104,7 +104,7 @@ int main() {
 
   vector<int> m = MaxDAG(graph).get_result();
   for(int i = 0; i < m.size(); i++)
-    cout << m[i] << " - ";
-  cout << endl;
+    cerr << m[i] << " - ";
+  cerr << endl;
 }
 */

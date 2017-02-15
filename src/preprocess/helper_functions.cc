@@ -88,9 +88,9 @@ void read_goal(istream &in, const vector<Variable *> &variables,
 }
 
 void dump_goal(const vector<pair<Variable *, int>> &goals) {
-    cout << "Goal Conditions:" << endl;
+    cerr << "Goal Conditions:" << endl;
     for (const auto &goal : goals)
-        cout << "  " << goal.first->get_name() << ": "
+        cerr << "  " << goal.first->get_name() << ": "
              << goal.second << endl;
 }
 
@@ -134,11 +134,11 @@ void dump_preprocessed_problem_description(const vector<Variable *> &variables,
                                            const vector<pair<Variable *, int>> &goals,
                                            const vector<Operator> &operators,
                                            const vector<Axiom> &axioms) {
-    cout << "Variables (" << variables.size() << "):" << endl;
+    cerr << "Variables (" << variables.size() << "):" << endl;
     for (Variable *var : variables)
         var->dump();
 
-    cout << "Initial State:" << endl;
+    cerr << "Initial State:" << endl;
     initial_state.dump();
     dump_goal(goals);
 
@@ -152,7 +152,7 @@ void dump_DTGs(const vector<Variable *> &ordering,
                vector<DomainTransitionGraph> &transition_graphs) {
     int num_graphs = transition_graphs.size();
     for (int i = 0; i < num_graphs; i++) {
-        cout << "Domain transition graph for " << ordering[i]->get_name() << ":" << endl;
+        cerr << "Domain transition graph for " << ordering[i]->get_name() << ":" << endl;
         transition_graphs[i].dump();
     }
 }

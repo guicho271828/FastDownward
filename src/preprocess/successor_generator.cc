@@ -79,15 +79,15 @@ GeneratorSwitch::~GeneratorSwitch() {
 }
 
 void GeneratorSwitch::dump(string indent) const {
-    cout << indent << "switch on " << switch_var->get_name() << endl;
-    cout << indent << "immediately:" << endl;
+    cerr << indent << "switch on " << switch_var->get_name() << endl;
+    cerr << indent << "immediately:" << endl;
     for (int op_id : immediate_ops_indices)
-        cout << indent << op_id << endl;
+        cerr << indent << op_id << endl;
     for (int i = 0; i < switch_var->get_range(); i++) {
-        cout << indent << "case " << i << ":" << endl;
+        cerr << indent << "case " << i << ":" << endl;
         generator_for_value[i]->dump(indent + "  ");
     }
-    cout << indent << "always:" << endl;
+    cerr << indent << "always:" << endl;
     default_generator->dump(indent + "  ");
 }
 
@@ -99,11 +99,11 @@ void GeneratorSwitch::generate_cpp_input(ofstream &outfile) const {
     for (int op_id : immediate_ops_indices)
         outfile << op_id << endl;
     for (int i = 0; i < switch_var->get_range(); i++) {
-        //cout << "case "<<switch_var->get_name()<<" (Level " <<switch_var->get_level() <<
+        //cerr << "case "<<switch_var->get_name()<<" (Level " <<switch_var->get_level() <<
         //  ") has value " << i << ":" << endl;
         generator_for_value[i]->generate_cpp_input(outfile);
     }
-    //cout << "always:" << endl;
+    //cerr << "always:" << endl;
     default_generator->generate_cpp_input(outfile);
 }
 
@@ -113,7 +113,7 @@ GeneratorLeaf::GeneratorLeaf(list<int> &ops) {
 
 void GeneratorLeaf::dump(string indent) const {
     for (int op_id : applicable_ops_indices)
-        cout << indent << op_id << endl;
+        cerr << indent << op_id << endl;
 }
 
 void GeneratorLeaf::generate_cpp_input(ofstream &outfile) const {
@@ -123,7 +123,7 @@ void GeneratorLeaf::generate_cpp_input(ofstream &outfile) const {
 }
 
 void GeneratorEmpty::dump(string indent) const {
-    cout << indent << "<empty>" << endl;
+    cerr << indent << "<empty>" << endl;
 }
 
 void GeneratorEmpty::generate_cpp_input(ofstream &outfile) const {
@@ -234,7 +234,7 @@ SuccessorGenerator::~SuccessorGenerator() {
 }
 
 void SuccessorGenerator::dump() const {
-    cout << "Successor Generator:" << endl;
+    cerr << "Successor Generator:" << endl;
     root->dump("  ");
 }
 void SuccessorGenerator::generate_cpp_input(ofstream &outfile) const {

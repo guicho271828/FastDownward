@@ -23,11 +23,11 @@ int MutexGroup::get_encoding_size() const {
 }
 
 void MutexGroup::dump() const {
-    cout << "mutex group of size " << facts.size() << ":" << endl;
+    cerr << "mutex group of size " << facts.size() << ":" << endl;
     for (const auto &fact : facts) {
         const Variable *var = fact.first;
         int value = fact.second;
-        cout << "   " << var->get_name() << " = " << value
+        cerr << "   " << var->get_name() << " = " << value
              << " (" << var->get_fact_name(value) << ")" << endl;
     }
 }
@@ -70,6 +70,6 @@ void strip_mutexes(vector<MutexGroup> &mutexes) {
             mutexes[new_index++] = mutex;
     }
     mutexes.erase(mutexes.begin() + new_index, mutexes.end());
-    cout << mutexes.size() << " of " << old_count
+    cerr << mutexes.size() << " of " << old_count
          << " mutex groups necessary." << endl;
 }

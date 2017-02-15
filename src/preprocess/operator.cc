@@ -41,23 +41,23 @@ Operator::Operator(istream &in, const vector<Variable *> &variables) {
 }
 
 void Operator::dump() const {
-    cout << name << ":" << endl;
-    cout << "prevail:";
+    cerr << name << ":" << endl;
+    cerr << "prevail:";
     for (const auto &prev : prevail)
-        cout << "  " << prev.var->get_name() << " := " << prev.prev;
-    cout << endl;
-    cout << "pre-post:";
+        cerr << "  " << prev.var->get_name() << " := " << prev.prev;
+    cerr << endl;
+    cerr << "pre-post:";
     for (const auto &eff : pre_post) {
         if (eff.is_conditional_effect) {
-            cout << "  if (";
+            cerr << "  if (";
             for (const auto &cond : eff.effect_conds)
-                cout << cond.var->get_name() << " := " << cond.cond;
-            cout << ") then";
+                cerr << cond.var->get_name() << " := " << cond.cond;
+            cerr << ") then";
         }
-        cout << " " << eff.var->get_name() << " : "
+        cerr << " " << eff.var->get_name() << " : "
              << eff.pre << " -> " << eff.post;
     }
-    cout << endl;
+    cerr << endl;
 }
 
 int Operator::get_encoding_size() const {
@@ -92,7 +92,7 @@ void strip_operators(vector<Operator> &operators) {
             operators[new_index++] = op;
     }
     operators.erase(operators.begin() + new_index, operators.end());
-    cout << operators.size() << " of " << old_count << " operators necessary." << endl;
+    cerr << operators.size() << " of " << old_count << " operators necessary." << endl;
 }
 
 void Operator::generate_cpp_input(ofstream &outfile) const {

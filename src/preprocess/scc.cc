@@ -86,8 +86,8 @@ int main() {
   vector<vector<int> > sccs = SCC(graph).get_result();
   for(int i = 0; i < sccs.size(); i++) {
     for(int j = 0; j < sccs[i].size(); j++)
-      cout << " " << sccs[i][j];
-    cout << endl;
+      cerr << " " << sccs[i][j];
+    cerr << endl;
   }
 }
 */

@@ -35,18 +35,18 @@ void strip_axioms(vector<Axiom> &axioms) {
         if (!axiom.is_redundant())
             axioms[new_index++] = axiom;
     axioms.erase(axioms.begin() + new_index, axioms.end());
-    cout << axioms.size() << " of " << old_count << " axiom rules necessary." << endl;
+    cerr << axioms.size() << " of " << old_count << " axiom rules necessary." << endl;
 }
 
 void Axiom::dump() const {
-    cout << "axiom:" << endl;
-    cout << "conditions:";
+    cerr << "axiom:" << endl;
+    cerr << "conditions:";
     for (const Condition &condition : conditions)
-        cout << "  " << condition.var->get_name() << " := " << condition.cond;
-    cout << endl;
-    cout << "derived:" << endl;
-    cout << effect_var->get_name() << " -> " << effect_val << endl;
-    cout << endl;
+        cerr << "  " << condition.var->get_name() << " := " << condition.cond;
+    cerr << endl;
+    cerr << "derived:" << endl;
+    cerr << effect_var->get_name() << " -> " << effect_val << endl;
+    cerr << endl;
 }
 
 int Axiom::get_encoding_size() const {

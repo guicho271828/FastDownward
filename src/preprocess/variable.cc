@@ -49,12 +49,12 @@ bool Variable::is_necessary() const {
 void Variable::dump() const {
     // TODO: Dump values (and other information that might be missing?)
     //       or get rid of this if it's no longer needed.
-    cout << name << " [range " << get_range();
+    cerr << name << " [range " << get_range();
     if (level != -1)
-        cout << "; level " << level;
+        cerr << "; level " << level;
     if (is_derived())
-        cout << "; derived; layer: " << layer;
-    cout << "]" << endl;
+        cerr << "; derived; layer: " << layer;
+    cerr << "]" << endl;
 }
 
 void Variable::generate_cpp_input(ofstream &outfile) const {

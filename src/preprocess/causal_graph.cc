@@ -122,26 +122,26 @@ CausalGraph::CausalGraph(const vector<Variable *> &the_variables,
     Partition sccs;
     get_strongly_connected_components(sccs);
 
-    cout << "The causal graph is "
+    cerr << "The causal graph is "
          << (sccs.size() == variables.size() ? "" : "not ")
          << "acyclic." << endl;
     /*
     if (sccs.size() != variables.size()) {
-      cout << "Components: " << endl;
+      cerr << "Components: " << endl;
       for(int i = 0; i < sccs.size(); i++) {
         for(int j = 0; j < sccs[i].size(); j++)
-          cout << " " << sccs[i][j]->get_name();
-        cout << endl;
+          cerr << " " << sccs[i][j]->get_name();
+        cerr << endl;
       }
     }
     */
     calculate_topological_pseudo_sort(sccs);
     calculate_important_vars();
 
-    // cout << "new variable order: ";
+    // cerr << "new variable order: ";
     // for(int i = 0; i < ordering.size(); i++)
-    //   cout << ordering[i]->get_name()<<" - ";
-    // cout << endl;
+    //   cerr << ordering[i]->get_name()<<" - ";
+    // cerr << endl;
 }
 
 void CausalGraph::calculate_topological_pseudo_sort(const Partition &sccs) {
@@ -222,7 +222,7 @@ void CausalGraph::get_strongly_connected_components(Partition &result) {
 void CausalGraph::calculate_important_vars() {
     for (const auto &goal : goals) {
         if (!goal.first->is_necessary()) {
-            //cout << "var " << goals[i].first->get_name() <<" is directly neccessary."
+            //cerr << "var " << goals[i].first->get_name() <<" is directly neccessary."
             // << endl;
             goal.first->set_necessary();
             dfs(goal.first);
@@ -239,7 +239,7 @@ void CausalGraph::calculate_important_vars() {
     for (int i = 0; i < new_size; i++) {
         ordering[i]->set_level(i);
     }
-    cout << new_size << " variables of " << old_size << " necessary" << endl;
+    cerr << new_size << " variables of " << old_size << " necessary" << endl;
 }
 
 void CausalGraph::dfs(Variable *from) {
@@ -247,7 +247,7 @@ void CausalGraph::dfs(Variable *from) {
         Variable *curr_predecessor = pred.first;
         if (!curr_predecessor->is_necessary()) {
             curr_predecessor->set_necessary();
-            //cout << "var " << curr_predecessor->get_name() <<" is neccessary." << endl;
+            //cerr << "var " << curr_predecessor->get_name() <<" is neccessary." << endl;
             dfs(curr_predecessor);
         }
     }
@@ -263,16 +263,16 @@ bool CausalGraph::is_acyclic() const {
 
 void CausalGraph::dump() const {
     for (const auto &source : weighted_graph) {
-        cout << "dependent on var " << source.first->get_name() << ": " << endl;
+        cerr << "dependent on var " << source.first->get_name() << ": " << endl;
         for (const auto &succ : source.second) {
-            cout << "  [" << succ.first->get_name() << ", " << succ.second << "]" << endl;
+            cerr << "  [" << succ.first->get_name() << ", " << succ.second << "]" << endl;
             //assert(predecessor_graph[succ.first][source.first] == succ.second);
         }
     }
     for (const auto &source : predecessor_graph) {
-        cout << "var " << source.first->get_name() << " is dependent of: " << endl;
+        cerr << "var " << source.first->get_name() << " is dependent of: " << endl;
         for (const auto &succ : source.second)
-            cout << "  [" << succ.first->get_name() << ", " << succ.second << "]" << endl;
+            cerr << "  [" << succ.first->get_name() << ", " << succ.second << "]" << endl;
     }
 }
 void CausalGraph::generate_cpp_input(ofstream &outfile,
