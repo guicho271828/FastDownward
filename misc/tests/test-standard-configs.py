@@ -16,7 +16,7 @@ FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
     "visitall-sat11-strips/problem12.pddl",
-    "transport-sat11-strips/p03.pddl",
+    # "transport-sat11-strips/p03.pddl",
     "woodworking-sat11-strips/p03.pddl",
     "miconic/s1-0.pddl",
     "miconic/s10-0.pddl",
@@ -55,7 +55,7 @@ def run_plan_script(task, nick, config, debug):
         cmd += config + [task]
     else:
         cmd += [task] + config
-    print("\nSTAT Run {} {}:".format(nick,task))
+    print("\nSTAT run {} {}:".format(nick,task))
     sys.stdout.flush()
     subprocess.check_call(cmd)
 
