@@ -18,7 +18,10 @@ class FractalOpenList : public TypedTiebreakingOpenList<Entry> {
 
 public:
 private:
-    int max_depth;
+    uint max_depth;
+    uint current_dimension;
+    int random_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets);
+    int first_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets);
 protected:
 public:
     explicit FractalOpenList(const Options &opts);

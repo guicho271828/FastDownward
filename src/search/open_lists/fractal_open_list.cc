@@ -21,7 +21,38 @@ using namespace std;
 
 template<class Entry>
 FractalOpenList<Entry>::FractalOpenList(const Options &opts)
-    : TypedTiebreakingOpenList<Entry>(opts), max_depth(opts.get<bool>("max_depth")){
+    : TypedTiebreakingOpenList<Entry>(opts), max_depth(opts.get<int>("max_depth")){
+    assert(max_depth>0);
+}
+
+template<class Entry>
+int FractalOpenList<Entry>::random_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets){
+    vector<int> indices;
+    uint depth = 0;
+    for (auto &tbucket : tbuckets){
+        depth++;
+        if(depth*current_dimension > tbucket.second.size()){
+            indices.push_back(depth);
+        }
+    }
+    if (indices.empty()){
+        return -1;
+    }
+    else{
+        return g_rng(indices.size());
+    }
+}
+
+template<class Entry>
+int FractalOpenList<Entry>::first_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets){
+    uint depth = 0;
+    for (auto &tbucket : tbuckets){
+        depth++;
+        if(depth*current_dimension > tbucket.second.size()){
+            return depth;
+        }
+    }
+    return -1;
 }
 
 template<class Entry>
@@ -38,7 +69,12 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     }
     auto &tbuckets = it->second;
     assert(!tbuckets.empty());
-    auto it2 = this->stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
+
+    int bucket_i =
+        this->stochastic ?
+        random_index_with_size_diff(tbuckets) : first_index_with_size_diff(tbuckets);
+    
+    auto it2 = tbuckets.begin() + bucket_i;
     auto &tbucket = it2->second;
     assert(!tbucket.empty());
     
