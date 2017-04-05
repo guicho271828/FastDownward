@@ -9,6 +9,7 @@
 #include "../utils/rng.h"
 #include "../utils/memory.h"
 #include "../utils/system.h"
+#include "../utils/logging.h"
 
 #include <cassert>
 #include <deque>
@@ -26,33 +27,40 @@ FractalOpenList<Entry>::FractalOpenList(const Options &opts)
 }
 
 template<class Entry>
-int FractalOpenList<Entry>::random_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets){
+int FractalOpenList<Entry>::random_index_with_size_diff(const vector<uint> &records, int dim)
+{
     vector<int> indices;
     uint depth = 0;
-    for (auto &tbucket : tbuckets){
+    for (auto &record : records){
         depth++;
-        if(depth*current_dimension > tbucket.second.size()){
+        if(depth*dim > record){
             indices.push_back(depth);
         }
     }
-    if (indices.empty()){
+    if (records.empty())
+    {
+        return 0;
+    }
+    else if (indices.empty())
+    {
         return -1;
     }
-    else{
+    else
+    {
         return g_rng(indices.size());
     }
 }
 
 template<class Entry>
-int FractalOpenList<Entry>::first_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets){
+int FractalOpenList<Entry>::first_index_with_size_diff(const vector<uint> &records, int dim){
     uint depth = 0;
-    for (auto &tbucket : tbuckets){
+    for (auto &record : records){
         depth++;
-        if(depth*current_dimension > tbucket.second.size()){
+        if(depth*dim > record){
             return depth;
         }
     }
-    return -1;
+    return records.empty() ? 0 : -1;
 }
 
 template<class Entry>
@@ -69,17 +77,19 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     }
     auto &tbuckets = it->second;
     assert(!tbuckets.empty());
-
+    auto &records = expansion_records[it->first];
+    auto &dim = current_dimension[it->first];
 retry:
     int bucket_i =
         this->stochastic ?
-        random_index_with_size_diff(tbuckets) : first_index_with_size_diff(tbuckets);
+        random_index_with_size_diff(records,dim) :
+        first_index_with_size_diff(records,dim);
     if(bucket_i < 0){
-        current_dimension++;
-        cout << "Increased dimension: " << current_dimension << endl;
+        dim++;
+        cout << "Increased dimension " << dim << " @ key " << it->first << endl;
         goto retry;
     }
-    
+    records[bucket_i]++;
     auto it2 = tbuckets.begin() + bucket_i;
     auto &tbucket = it2->second;
     assert(!tbucket.empty());

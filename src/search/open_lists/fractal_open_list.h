@@ -8,20 +8,21 @@
 #include "../option_parser_util.h"
 #include "../utils/collections.h"
 
-// #include <deque>
-// #include <map>
-// #include <unordered_map>
-// #include <vector>
+#include <unordered_map>
 
 template<class Entry>
 class FractalOpenList : public TypedTiebreakingOpenList<Entry> {
-
+    typedef typename TypedTiebreakingOpenList<Entry>::Key Key;
+    typedef typename TypedTiebreakingOpenList<Entry>::TypeBuckets TypeBuckets;
 public:
+    
 private:
     uint max_depth;
-    uint current_dimension;
-    int random_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets);
-    int first_index_with_size_diff(typename TypedTiebreakingOpenList<Entry>::TypeBuckets &tbuckets);
+    std::unordered_map<Key,uint> current_dimension;
+    std::unordered_map<Key,std::vector<uint> > expansion_records; // how many times the depth was expanded
+    
+    int random_index_with_size_diff(const std::vector<uint> &records, int dim);
+    int first_index_with_size_diff(const std::vector<uint> &records, int dim);
 protected:
 public:
     explicit FractalOpenList(const Options &opts);
