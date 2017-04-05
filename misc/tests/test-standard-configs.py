@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 from __future__ import print_function
 
@@ -16,17 +16,17 @@ FAST_DOWNWARD = os.path.join(REPO, "fast-downward.py")
 
 TASKS = [os.path.join(BENCHMARKS_DIR, path) for path in [
     "visitall-sat11-strips/problem12.pddl",
-    # "transport-sat11-strips/p03.pddl",
-    # "woodworking-sat11-strips/p03.pddl",
-    # "miconic/s1-0.pddl",
-    # "miconic/s10-0.pddl",
-    # "airport-adl/p01-airport1-p1.pddl",
-    # "elevators-opt08-strips/p01.pddl",
-    # # "elevators-opt11-strips/p01.pddl",
-    # "openstacks-opt08-strips/p01.pddl",
-    # "driverlog/pfile1",
-    # "parking-opt11-strips/pfile03-011.pddl",
-    # "driverlog/pfile1",
+    "transport-sat11-strips/p03.pddl",
+    "woodworking-sat11-strips/p03.pddl",
+    "miconic/s1-0.pddl",
+    "miconic/s10-0.pddl",
+    "airport-adl/p01-airport1-p1.pddl",
+    "elevators-opt08-strips/p01.pddl",
+    "elevators-opt11-strips/p01.pddl",
+    "openstacks-opt08-strips/p01.pddl",
+    "driverlog/pfile1",
+    "parking-opt11-strips/pfile03-011.pddl",
+    "driverlog/pfile1",
 ]]
 
 CONFIGS = {}
@@ -55,7 +55,7 @@ def run_plan_script(task, nick, config, debug):
         cmd += config + [task]
     else:
         cmd += [task] + config
-    print("\nRun {}:".format(cmd))
+    print("\nSTAT Run {} {}:".format(nick,task))
     sys.stdout.flush()
     subprocess.check_call(cmd)
 

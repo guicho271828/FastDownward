@@ -153,27 +153,34 @@ def configs_optimal_extended():
     }
 
 
+common = ["--heuristic", "h=ff()", "--search",]
+
 def configs_satisficing_extended():
     return {
-        "ts": [
-            "--heuristic", "h=ff()", "--search",
+        "fifo": [
+            *common,
             "eager("
-            "tiebreaking([h,random()]),"
+            "tiebreaking([h],queue_type=FIFO),"
             "reopen_closed=true,f_eval=h)"],
-        "tr": [
-            "--heuristic", "h=ff()", "--search",
+        "lifo": [
+            *common,
             "eager("
-            "tiebreaking([h,random(memo=false)]),"
+            "tiebreaking([h],queue_type=LIFO),"
             "reopen_closed=true,f_eval=h)"],
-        "ts1": [
-            "--heuristic", "h=ff()", "--search",
+        "type": [
+            *common,
             "eager("
-            "tiebreaking([h,random()]),"
+            "typed_tiebreaking([h],[depth([h])],queue_type=FIFO),"
             "reopen_closed=false,f_eval=h)"],
-        "tr1": [
-            "--heuristic", "h=ff()", "--search",
+        "bip": [
+            *common,
             "eager("
-            "tiebreaking([h,random(memo=false)]),"
+            "typed_tiebreaking([h],[random_edge()],queue_type=FIFO),"
+            "reopen_closed=false,f_eval=h)"],
+        "frac": [
+            *common,
+            "eager("
+            "fractal([h],queue_type=FIFO),"
             "reopen_closed=false,f_eval=h)"],
     }
 
