@@ -96,10 +96,10 @@ public:
     typedef index_access_unordered_map<Key, Bucket<Entry>> TypeBuckets;
 private:
     std::vector<ScalarEvaluator *> type_evaluators;
-    bool stochastic;
 
 protected:
     std::map<Key, TypeBuckets> buckets;
+    bool stochastic;
     virtual void do_insertion(EvaluationContext &eval_context,
                               const Entry &entry) override;
 public:

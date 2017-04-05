@@ -28,9 +28,9 @@ template<class Entry>
 Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     assert(this->size > 0);
     --(this->size);
-    assert(!buckets.empty());
-    auto it = buckets.begin();  // sorted buckets
-    assert(it != buckets.end());
+    assert(!this->buckets.empty());
+    auto it = this->buckets.begin();  // sorted buckets
+    assert(it != this->buckets.end());
     assert(!it->second.empty());
     if (key) {
         assert(key->empty());
@@ -38,7 +38,7 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     }
     auto &tbuckets = it->second;
     assert(!tbuckets.empty());
-    auto it2 = stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
+    auto it2 = this->stochastic ? tbuckets.iter_random() : tbuckets.iter_next();
     auto &tbucket = it2->second;
     assert(!tbucket.empty());
     
@@ -46,7 +46,7 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     if (tbucket.empty()){
         tbuckets.erase(it2);
         if (tbuckets.empty()){
-            buckets.erase(it);
+            this->buckets.erase(it);
         }
     }
     return result;
