@@ -76,6 +76,7 @@ retry:
         random_index_with_size_diff(tbuckets) : first_index_with_size_diff(tbuckets);
     if(bucket_i < 0){
         current_dimension++;
+        cout << "Increased dimension: " << current_dimension << endl;
         goto retry;
     }
     
