@@ -70,9 +70,14 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     auto &tbuckets = it->second;
     assert(!tbuckets.empty());
 
+retry:
     int bucket_i =
         this->stochastic ?
         random_index_with_size_diff(tbuckets) : first_index_with_size_diff(tbuckets);
+    if(bucket_i < 0){
+        current_dimension++;
+        goto retry;
+    }
     
     auto it2 = tbuckets.begin() + bucket_i;
     auto &tbucket = it2->second;
@@ -111,7 +116,7 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
                                               "Scalar evaluators."
                                               "Results are sorted according to the dictionary order,"
                                               "preferring smaller numbers.");
-    parser.add_option<int>("max_depth", "Max depth in a plateau. ");
+    parser.add_option<int>("max_depth", "Max depth in a plateau. UNUSED");
     add_queue_type_option_to_parser(parser);
     parser.add_option<bool>(
         "pref_only",
