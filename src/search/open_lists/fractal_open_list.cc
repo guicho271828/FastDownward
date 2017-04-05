@@ -116,7 +116,7 @@ static shared_ptr<OpenListFactory> _parse(OptionParser &parser) {
                                               "Scalar evaluators."
                                               "Results are sorted according to the dictionary order,"
                                               "preferring smaller numbers.");
-    parser.add_option<int>("max_depth", "Max depth in a plateau. UNUSED");
+    parser.add_option<int>("max_depth", "Max depth in a plateau. UNUSED","1000000");
     add_queue_type_option_to_parser(parser);
     parser.add_option<bool>(
         "pref_only",
