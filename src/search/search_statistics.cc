@@ -54,21 +54,17 @@ void SearchStatistics::print_basic_statistics() const {
 }
 
 void SearchStatistics::print_detailed_statistics() const {
-    cout << "Expanded " << expanded_states << " state(s)." << endl;
-    cout << "Reopened " << reopened_states << " state(s)." << endl;
-    cout << "Evaluated " << evaluated_states << " state(s)." << endl;
-    cout << "Evaluations: " << evaluations << endl;
-    cout << "Generated " << generated_states << " state(s)." << endl;
-    cout << "Dead ends: " << dead_end_states << " state(s)." << endl;
+    cout << "STAT expanded    " << expanded_states  << endl;
+    cout << "STAT reopened    " << reopened_states  << endl;
+    cout << "STAT evaluated   " << evaluated_states << endl;
+    cout << "STAT evaluations " << evaluations      << endl;
+    cout << "STAT generated   " << generated_states << endl;
+    cout << "STAT dead ends   " << dead_end_states  << endl;
 
     if (lastjump_f_value >= 0) {
-        cout << "Expanded until last jump: "
-             << lastjump_expanded_states << " state(s)." << endl;
-        cout << "Reopened until last jump: "
-             << lastjump_reopened_states << " state(s)." << endl;
-        cout << "Evaluated until last jump: "
-             << lastjump_evaluated_states << " state(s)." << endl;
-        cout << "Generated until last jump: "
-             << lastjump_generated_states << " state(s)." << endl;
+        cout << "STAT expanded_until_last_jump  " << lastjump_expanded_states  << endl;
+        cout << "STAT reopened_until_last_jump  " << lastjump_reopened_states  << endl;
+        cout << "STAT evaluated_until_last_jump " << lastjump_evaluated_states << endl;
+        cout << "STAT generated_until_last_jump " << lastjump_generated_states << endl;
     }
 }
