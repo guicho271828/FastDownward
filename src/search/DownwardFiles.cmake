@@ -46,6 +46,7 @@ set(CORE_SOURCES
         task_proxy.cc
         task_tools.cc
         variable_order_finder.cc
+        backward.cc
 
         open_lists/alternation_open_list.cc
         open_lists/weighted_alternation_open_list.cc

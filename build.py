@@ -11,8 +11,8 @@ CONFIGS = {
     "release64": ["-DCMAKE_BUILD_TYPE=Release", "-DALLOW_64_BIT=True", "-DCMAKE_CXX_FLAGS='-m64'"],
     "debug64":   ["-DCMAKE_BUILD_TYPE=Debug",   "-DALLOW_64_BIT=True", "-DCMAKE_CXX_FLAGS='-m64'"],
 }
-DEFAULT_DEBUG_CONFIG = "debug32"
-DEFAULT_CONFIG = "release32"
+DEFAULT_DEBUG_CONFIG = "debug64"
+DEFAULT_CONFIG = "release64"
 
 CMAKE = "cmake"
 if os.name == "posix":
