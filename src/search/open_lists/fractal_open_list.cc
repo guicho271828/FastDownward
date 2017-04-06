@@ -24,7 +24,6 @@ template<class Entry>
 FractalOpenList<Entry>::FractalOpenList(const Options &opts)
     : TypedTiebreakingOpenList<Entry>(opts), max_depth(opts.get<int>("max_depth")){
     assert(max_depth>0);
-    records.resize(100);
 }
 
 template<class Entry>
@@ -81,6 +80,9 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     assert(!tbuckets.empty());
     auto &records = expansion_records[it->first];
     auto &dim = current_dimension[it->first];
+    if (records.empty()){
+        records.resize(32);
+    }
 retry:
     int bucket_i =
         this->stochastic ?
@@ -91,7 +93,7 @@ retry:
         cout << "Increased dimension " << dim << " @ key " << it->first << endl;
         goto retry;
     }
-    if (bucket_i >= records.size()){
+    if ((uint)(bucket_i) >= records.size()){
         records.resize(records.size()*2);
     }
     records[bucket_i]++;
