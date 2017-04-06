@@ -24,6 +24,7 @@ template<class Entry>
 FractalOpenList<Entry>::FractalOpenList(const Options &opts)
     : TypedTiebreakingOpenList<Entry>(opts), max_depth(opts.get<int>("max_depth")){
     assert(max_depth>0);
+    records.resize(100);
 }
 
 template<class Entry>
@@ -52,7 +53,8 @@ int FractalOpenList<Entry>::random_index_with_size_diff(const vector<uint> &reco
 }
 
 template<class Entry>
-int FractalOpenList<Entry>::first_index_with_size_diff(const vector<uint> &records, int dim){
+int FractalOpenList<Entry>::first_index_with_size_diff(const vector<uint> &records, int dim)
+{
     uint depth = 0;
     for (auto &record : records){
         depth++;
@@ -88,6 +90,9 @@ retry:
         dim++;
         cout << "Increased dimension " << dim << " @ key " << it->first << endl;
         goto retry;
+    }
+    if (bucket_i >= records.size()){
+        records.resize(records.size()*2);
     }
     records[bucket_i]++;
     auto it2 = tbuckets.begin() + bucket_i;
