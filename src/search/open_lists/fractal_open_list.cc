@@ -90,7 +90,7 @@ retry:
         first_index_with_size_diff(records,dim);
     if(bucket_i < 0){
         dim++;
-        cout << "Increased dimension " << dim << " @ key " << it->first << endl;
+        cout << "Increased dimension to " << dim << " @ key " << it->first << endl;
         goto retry;
     }
     if ((uint)(bucket_i) >= records.size()){
