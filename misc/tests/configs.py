@@ -157,26 +157,26 @@ common = ["--heuristic", "h=ff()", "--search",]
 
 def configs_satisficing_extended():
     return {
-        "fifo": [
-            *common,
-            "eager("
-            "tiebreaking([h],queue_type=FIFO),"
-            "reopen_closed=true,f_eval=h)"],
-        "lifo": [
-            *common,
-            "eager("
-            "tiebreaking([h],queue_type=LIFO),"
-            "reopen_closed=true,f_eval=h)"],
-        "type": [
-            *common,
-            "eager("
-            "typed_tiebreaking([h],[depth([h])],queue_type=FIFO),"
-            "reopen_closed=false,f_eval=h)"],
-        "bip": [
-            *common,
-            "eager("
-            "typed_tiebreaking([h],[random_edge()],queue_type=FIFO),"
-            "reopen_closed=false,f_eval=h)"],
+        # "fifo": [
+        #     *common,
+        #     "eager("
+        #     "tiebreaking([h],queue_type=FIFO),"
+        #     "reopen_closed=true,f_eval=h)"],
+        # "lifo": [
+        #     *common,
+        #     "eager("
+        #     "tiebreaking([h],queue_type=LIFO),"
+        #     "reopen_closed=true,f_eval=h)"],
+        # "type": [
+        #     *common,
+        #     "eager("
+        #     "typed_tiebreaking([h],[depth([h])],queue_type=FIFO),"
+        #     "reopen_closed=false,f_eval=h)"],
+        # "bip": [
+        #     *common,
+        #     "eager("
+        #     "typed_tiebreaking([h],[random_edge()],queue_type=FIFO),"
+        #     "reopen_closed=false,f_eval=h)"],
         "frac": [
             *common,
             "eager("
