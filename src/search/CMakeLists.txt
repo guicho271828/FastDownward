@@ -15,9 +15,24 @@ project(downward)
 fast_downward_set_compiler_flags()
 fast_downward_set_linker_flags()
 
+
+add_subdirectory(backward-cpp)
+# This will add backward.cpp to your target
+
 # Collect source files needed for the active plugins.
 include("${CMAKE_CURRENT_SOURCE_DIR}/DownwardFiles.cmake")
-add_executable(downward ${PLANNER_SOURCES})
+add_executable(downward ${PLANNER_SOURCES} ${BACKWARD_ENABLE})
+
+target_link_libraries(downward elf)
+# target_link_libraries(downward "/usr/lib/x86_64-linux-gnu/elfutils/libebl_x86_64.so")
+target_link_libraries(downward z)
+target_link_libraries(downward lzma)
+
+# This will add libraries, definitions and include directories needed by backward
+# by setting each property on the target.
+add_backward(downward)
+# additionally install the following:
+# sudo apt install libdw-dev zlib1g-dev libelf-dev
 
 ## == Includes ==
 
@@ -35,7 +50,7 @@ if(WIN32)
     target_link_libraries(downward psapi)
 endif()
 
-target_link_libraries(downward dw)
+
 
 # If any enabled plugin requires an LP solver, compile with all
 # available LP solvers. If no solvers are installed, the planner will
