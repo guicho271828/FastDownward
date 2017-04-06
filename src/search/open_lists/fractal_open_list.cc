@@ -17,6 +17,7 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+#include <set>
 
 using namespace std;
 
@@ -26,43 +27,6 @@ FractalOpenList<Entry>::FractalOpenList(const Options &opts)
     assert(max_depth>0);
 }
 
-template<class Entry>
-int FractalOpenList<Entry>::random_index_with_size_diff(const vector<uint> &records, int dim)
-{
-    vector<int> indices;
-    uint depth = 0;
-    for (auto &record : records){
-        depth++;
-        if(depth*dim > record){
-            indices.push_back(depth);
-        }
-    }
-    if (records.empty())
-    {
-        return 0;
-    }
-    else if (indices.empty())
-    {
-        return -1;
-    }
-    else
-    {
-        return g_rng(indices.size());
-    }
-}
-
-template<class Entry>
-int FractalOpenList<Entry>::first_index_with_size_diff(const vector<uint> &records, int dim)
-{
-    uint depth = 0;
-    for (auto &record : records){
-        depth++;
-        if(depth*dim > record){
-            return depth;
-        }
-    }
-    return records.empty() ? 0 : -1;
-}
 
 template<class Entry>
 Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
@@ -83,24 +47,32 @@ Entry FractalOpenList<Entry>::remove_min(vector<int> *key) {
     if (records.empty()){
         records.resize(32);
     }
+    // cout << "Records: " << records << endl;
 retry:
-    int bucket_i =
-        this->stochastic ?
-        random_index_with_size_diff(records,dim) :
-        first_index_with_size_diff(records,dim);
-    if(bucket_i < 0){
-        dim++;
-        cout << "Increased dimension to " << dim << " @ key " << it->first << endl;
-        goto retry;
+    // ignore stochastic for now
+    auto it2 = tbuckets.begin();
+    for (;it2!=tbuckets.end();it2++){
+        uint depth = it2->first[0];
+        // cout << "depth " << depth << endl;
+        if (depth >= records.size()){
+            // implies record[depth] is zero
+            goto found;
+        }
+        if ((1+depth)*(1+dim) > records[depth]){
+            goto found;
+        }
     }
-    if ((uint)(bucket_i) >= records.size()){
-        records.resize(records.size()*2);
-    }
-    auto it2 = tbuckets.begin() + bucket_i;
+    // tbuckets is guaranteed to be non-empty.
+    // Thus this means all records fulfilled the dimension distribution
+    dim++;
+    // cout << "Increased dimension to " << dim << " @ key " << it->first << endl;
+    goto retry;
+found:
     auto &tbucket = it2->second;
     assert(!tbucket.empty());
     
-    records[bucket_i]++;
+    records[it2->first[0]]++;
+    // cout << "Records2: " << records << endl;
     
     Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
     if (tbucket.empty()){

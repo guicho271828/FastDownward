@@ -21,8 +21,6 @@ private:
     std::unordered_map<Key,uint> current_dimension;
     std::unordered_map<Key,std::vector<uint> > expansion_records; // how many times the depth was expanded
     
-    int random_index_with_size_diff(const std::vector<uint> &records, int dim);
-    int first_index_with_size_diff(const std::vector<uint> &records, int dim);
 protected:
 public:
     explicit FractalOpenList(const Options &opts);
