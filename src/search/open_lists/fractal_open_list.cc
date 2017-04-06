@@ -96,10 +96,11 @@ retry:
     if ((uint)(bucket_i) >= records.size()){
         records.resize(records.size()*2);
     }
-    records[bucket_i]++;
     auto it2 = tbuckets.begin() + bucket_i;
     auto &tbucket = it2->second;
     assert(!tbucket.empty());
+    
+    records[bucket_i]++;
     
     Entry result = pop_bucket<Entry,Bucket<Entry>>(tbucket, this->queue_type);
     if (tbucket.empty()){
