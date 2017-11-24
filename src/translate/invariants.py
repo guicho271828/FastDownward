@@ -105,6 +105,7 @@ def ensure_inequality(system, literal1, literal2):
 
 
 class InvariantPart:
+    "Masataro: this is each atom in the invariant candidate."
     def __init__(self, predicate, order, omitted_pos=-1):
         self.predicate = predicate
         self.order = order
@@ -137,6 +138,9 @@ class InvariantPart:
         return len(self.order)
 
     def get_assignment(self, parameters, literal):
+        # for parameters (?x ?y ?z) and literal (?a obj ?c)
+        # returns an assignment constraint which impose
+        # ?x = ?a, ?y = obj, ?z = ?c
         equalities = [(arg, literal.args[argpos])
                       for arg, argpos in zip(parameters, self.order)]
         return constraints.Assignment(equalities)

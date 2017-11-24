@@ -78,10 +78,20 @@ def get_fluents(task):
 
 def get_initial_invariants(task):
     for predicate in get_fluents(task):
+        # asai: each predicate in the task
         all_args = list(range(len(predicate.arguments)))
-        for omitted_arg in [-1] + all_args:
+        # asai: [0, 1, 2]
+        for omitted_arg in [-1] + all_args: # [-1, 0, 1, 2]
+            # when omitted_args is -1, it means no arg is ignored
+            # (?x ?y ?z) (pred ?x ?y ?z)
+            # otherwise there is a single counted variable
+            # (?x ?y) (pred ?x ?y ?z)
+            # (?x ?z) (pred ?x ?y ?z)
+            # (?y ?z) (pred ?x ?y ?z)
             order = [i for i in all_args if i != omitted_arg]
+            # order is [0,1,2] or [1,2] or [0,2] or [0,1]
             part = invariants.InvariantPart(predicate.name, order, omitted_arg)
+            # start from the invariant with a single atom.
             yield invariants.Invariant((part,))
 
 def find_invariants(task, reachable_action_params):
