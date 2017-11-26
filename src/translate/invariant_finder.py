@@ -69,6 +69,7 @@ class BalanceChecker(object):
         else:
             return action
 
+# ok!
 def get_fluents(task):
     fluent_names = set()
     for action in task.actions:
@@ -76,6 +77,7 @@ def get_fluents(task):
             fluent_names.add(eff.literal.predicate)
     return [pred for pred in task.predicates if pred.name in fluent_names]
 
+# ok!
 def get_initial_invariants(task):
     for predicate in get_fluents(task):
         # asai: each predicate in the task
@@ -94,6 +96,7 @@ def get_initial_invariants(task):
             # start from the invariant with a single atom.
             yield invariants.Invariant((part,))
 
+# ok!
 def find_invariants(task, reachable_action_params):
     limit = options.invariant_generation_max_candidates
     candidates = deque(itertools.islice(get_initial_invariants(task), 0, limit))

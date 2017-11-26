@@ -27,11 +27,17 @@ def instantiate_factored_mapping(pairs):
                      for (preimg, img) in pairs]
     return tools.cartesian_product(part_mappings)
 
-
+# This function is not named properly. Masataro
+# This returns a list of gensyms, as many as the invariant arity.
+# 
+# Python does not have gensyms, thus it needs to avoid having
+# duplicate names by checking the variables in the action.
+# The sole reason of having an action as the first arg is due to this.
 def find_unique_variables(action, invariant):
     # find unique names for invariant variables
     params = set([p.name for p in action.parameters])
     for eff in action.effects:
+        # add the universally quantified vars
         params.update([p.name for p in eff.parameters])
     inv_vars = []
     counter = itertools.count()
@@ -43,14 +49,12 @@ def find_unique_variables(action, invariant):
                 break
     return inv_vars
 
-
 def get_literals(condition):
     if isinstance(condition, pddl.Literal):
         yield condition
     elif isinstance(condition, pddl.Conjunction):
         for literal in condition.parts:
             yield literal
-
 
 def ensure_conjunction_sat(system, *parts):
     """Modifies the constraint system such that it is only solvable if the
@@ -83,10 +87,12 @@ def ensure_conjunction_sat(system, *parts):
                         negative_clause = constraints.NegativeClause(parts)
                         system.add_negative_clause(negative_clause)
 
-
 def ensure_cover(system, literal, invariant, inv_vars):
     """Modifies the constraint system such that it is only solvable if the
        invariant covers the literal"""
+    
+    # inv_vars: gensym'd names, all different from variables in the current
+    # action
     a = invariant.get_covering_assignments(inv_vars, literal)
     assert(len(a) == 1)
     # if invariants could contain several parts of one predicate, this would
@@ -105,7 +111,7 @@ def ensure_inequality(system, literal1, literal2):
 
 
 class InvariantPart:
-    "Masataro: this is each atom in the invariant candidate."
+    # Masataro: this is each atom in the invariant candidate.
     def __init__(self, predicate, order, omitted_pos=-1):
         self.predicate = predicate
         self.order = order
@@ -134,10 +140,12 @@ class InvariantPart:
             omitted_string = " [%d]" % self.omitted_pos
         return "%s %s%s" % (self.predicate, var_string, omitted_string)
 
+    # returns the numbr of forall parameters (↔ counted variables)
     def arity(self):
         return len(self.order)
 
     def get_assignment(self, parameters, literal):
+        # WIP
         # for parameters (?x ?y ?z) and literal (?a obj ?c)
         # returns an assignment constraint which impose
         # ?x = ?a, ?y = obj, ?z = ?c
@@ -145,6 +153,7 @@ class InvariantPart:
                       for arg, argpos in zip(parameters, self.order)]
         return constraints.Assignment(equalities)
 
+    # returns forall parameters (↔ counted variables)
     def get_parameters(self, literal):
         return [literal.args[pos] for pos in self.order]
 
@@ -191,6 +200,8 @@ class InvariantPart:
     def matches(self, other, own_literal, other_literal):
         return self.get_parameters(own_literal) == other.get_parameters(other_literal)
 
+# note that all atoms in invariants share the same set of variables
+# whether they be counted or not.
 
 class Invariant:
     # An invariant is a logical expression of the type
@@ -204,31 +215,29 @@ class Invariant:
         self.predicates = set([part.predicate for part in parts])
         self.predicate_to_part = dict([(part.predicate, part) for part in parts])
         assert len(self.parts) == len(self.predicates)
-
     def __eq__(self, other):
         return self.parts == other.parts
-
     def __ne__(self, other):
         return self.parts != other.parts
-
     def __lt__(self, other):
         return self.parts < other.parts
-
     def __le__(self, other):
         return self.parts <= other.parts
-
     def __hash__(self):
         return hash(self.parts)
-
     def __str__(self):
         return "{%s}" % ", ".join(str(part) for part in self.parts)
-
     def __repr__(self):
         return '<Invariant %s>' % self
 
+    # arity of an invariant == arity of any atoms in it.
+    # arity of an atom = number of forall parameters of an atom of an invariant
     def arity(self):
+        # returns the arity of the first element.
+        # using next(iter()) because a set does not have ordering.
         return next(iter(self.parts)).arity()
 
+    # forall parameters of an atom of an invariant
     def get_parameters(self, atom):
         return self.predicate_to_part[atom.predicate].get_parameters(atom)
 
@@ -236,7 +245,16 @@ class Invariant:
         return [part.instantiate(parameters) for part in self.parts]
 
     def get_covering_assignments(self, parameters, atom):
+        # find the atom in the invariant (SELF) with the same name as ATOM
         part = self.predicate_to_part[atom.predicate]
+        # A list of a single Assignment object.
+        # For example, given
+        # atom = (location truck ?city)
+        # part = ((?x) (location ?x ?l))
+        # 
+        # parameters: gensym'd names, all different from variables in the
+        # current action. So, it tries to assign the arguments of the atom
+        # to the gensym'd variables.
         return [part.get_assignment(parameters, atom)]
         # if there were more parts for the same predicate the list
         # contained more than one element
@@ -259,13 +277,16 @@ class Invariant:
                        if not eff.literal.negated and
                           self.predicate_to_part.get(eff.literal.predicate)]
         inv_vars = find_unique_variables(h_action, self)
+        # ^^^^^^ gensym'd names, all different from variables in h_action
 
         if len(add_effects) <= 1:
             return False
 
         for eff1, eff2 in itertools.combinations(add_effects, 2):
             system = constraints.ConstraintSystem()
+            # ok!
             ensure_inequality(system, eff1.literal, eff2.literal)
+            # 
             ensure_cover(system, eff1.literal, self, inv_vars)
             ensure_cover(system, eff2.literal, self, inv_vars)
             ensure_conjunction_sat(system, get_literals(h_action.precondition),
