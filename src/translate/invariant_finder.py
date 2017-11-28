@@ -16,6 +16,7 @@ class BalanceChecker(object):
         self.predicates_to_add_actions = defaultdict(set)
         self.action_to_heavy_action = {}
         for act in task.actions:
+            # this is the part gabliele mentioned
             action = self.add_inequality_preconds(act, reachable_action_params)
             too_heavy_effects = []
             create_heavy_act = False

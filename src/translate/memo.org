@@ -1,0 +1,24 @@
+
+
+
++ find_invariants
+  + get_initial_invariants
+    + get_fluents
+  + Balancechecker.init
+  + candidate.check_balance (Invariant)
+    + operator_too_heavy
+      + find_unique_variables
+      + ensure_inequality
+        + add_negative_clause
+      + ensure_cover
+        + get_covering_assignments
+          + predicate_to_part
+          + get_assignment
+        + add_assignment_disjunction
+      + ensure_conjunction_sat
+        + add_negative_clause
+      + is_solvable XXX
+        + 
+    + operator_unbalanced
+      + 
+
