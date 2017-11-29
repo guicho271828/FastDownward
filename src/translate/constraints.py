@@ -173,6 +173,7 @@ class ConstraintSystem(object):
             combined = self._combine_assignments(assignments)
             if not combined.is_consistent():
                 continue
+            # check if the resulting assignment violates the inequality
             if self._all_clauses_satisfiable(combined):
                 return True
         return False
