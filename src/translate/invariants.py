@@ -146,6 +146,7 @@ class InvariantPart:
 
     def get_assignment(self, parameters, literal):
         # parameters = (?v1 ?v2)
+        # invariant: (at ?v1 ?v2) (in ?v2 ?v1)
         # literal    = (in truck ?thing)
         # returns an assignment constraint which impose
         # ?v1 = thing, ?v2 = ?truck

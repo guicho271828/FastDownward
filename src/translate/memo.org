@@ -14,7 +14,7 @@
         + get_covering_assignments
           + predicate_to_part
           + get_assignment
-        + add_assignment_disjunction
+        + add_assignment_disjunction (but each assignment has a single element)
       + ensure_conjunction_sat
         + add_negative_clause
       + is_solvable XXX
