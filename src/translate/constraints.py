@@ -42,19 +42,29 @@ class Assignment(object):
         return "(%s)" % conj
 
     def _compute_equivalence_classes(self):
+        # just grouping the pairs.
+        # similar to
+        # (v1 v2) (v1 v3) => (v1 . (v1 v2 v3))
         eq_classes = {}
         for (v1, v2) in self.equalities:
             c1 = eq_classes.setdefault(v1, set([v1]))
             c2 = eq_classes.setdefault(v2, set([v2]))
             if c1 is not c2:
                 if len(c2) > len(c1):
+                    # swap so that larger element corresponds to c1 and v1
                     v1, c1, v2, c2 = v2, c2, v1, c1
+                # merge c2 into c1
                 c1.update(c2)
+                # rewrite which class they belong
                 for elem in c2:
                     eq_classes[elem] = c1
         self.eq_classes = eq_classes
+        # of type dict(variable, set(variable))
 
     def _compute_mapping(self):
+        # equivalence_class: dict(variable, set(variable))
+        # this method returns:
+        #  dict(variable, representative variable or constant)
         if not self.eq_classes:
             self._compute_equivalence_classes()
 
@@ -65,13 +75,17 @@ class Assignment(object):
         for eq_class in self.eq_classes.values():
             variables = [item for item in eq_class if item.startswith("?")]
             constants = [item for item in eq_class if not item.startswith("?")]
+            # in each class, only one element can be a constant.
+            # otherwise, two constants are assgined to the single element.
             if len(constants) >= 2:
                 self.consistent = False
                 self.mapping = None
                 return
             if constants:
+                # there is a single constant. Thus we can assume this is hte value of the variables in this group.
                 set_val = constants[0]
             else:
+                # the value of this group is not determined yet. it just picks the first variable
                 set_val = min(variables)
             for entry in eq_class:
                 mapping[entry] = set_val
