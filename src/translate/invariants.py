@@ -268,6 +268,8 @@ class Invariant:
         return [part.get_assignment(parameters, atom)]
         # if there were more parts for the same predicate the list
         # contained more than one element
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        # This mysterious comment is intended for the future update
 
     def check_balance(self, balance_checker, enqueue_func):
         # Check balance for this hypothesis.
@@ -322,6 +324,7 @@ class Invariant:
                 return True
         return False
 
+    # returns list of length 1. A single system with negative clauses
     def minimal_covering_renamings(self, action, add_effect, inv_vars):
         """computes the minimal renamings of the action parameters such
            that the add effect is covered by the action.
@@ -329,7 +332,9 @@ class Invariant:
 
         # add_effect must be covered
         assigs = self.get_covering_assignments(inv_vars, add_effect.literal)
-
+        # Asai note: according to get_covering_assignments , it always returns a list of length 1
+        # assert(len(assigs) == 1) should be true here
+        
         # renaming of operator parameters must be minimal
         minimal_renamings = []
         params = [p.name for p in action.parameters]
@@ -343,14 +348,15 @@ class Invariant:
                         negative_clause = constraints.NegativeClause([(n1, n2)])
                         system.add_negative_clause(negative_clause)
             minimal_renamings.append(system)
+        # since assert(len(assigs) == 1), len(minimal_renamings) should be also 1
         return minimal_renamings
 
     def add_effect_unbalanced(self, action, add_effect, del_effects,
                               inv_vars, enqueue_func):
 
-        minimal_renamings = self.minimal_covering_renamings(action, add_effect,
-                                                            inv_vars)
-
+        minimal_renamings = self.minimal_covering_renamings(action, add_effect, inv_vars)
+        # See minimal_covering_renamings. len(minimal_renamings) is 1
+        
         lhs_by_pred = defaultdict(list)
         for lit in itertools.chain(get_literals(action.precondition),
                                    get_literals(add_effect.condition),

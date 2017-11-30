@@ -5,9 +5,9 @@
   + get_initial_invariants
     + get_fluents
   + Balancechecker.init
-  + candidate.check_balance (Invariant)
+  + Invariant.check_balance
     + operator_too_heavy
-      + find_unique_variables
+      + *find_unique_variables*
       + ensure_inequality
         + add_negative_clause
       + ensure_cover
@@ -20,5 +20,13 @@
       + is_solvable XXX
         + 
     + operator_unbalanced
-      + 
+      + *find_unique_variables*
+      + add_effect_unbalanced
+        + minimal_covering_renamings
+          + get_covering_assignments
+          + add_assignment
+          + add_negative_clause
+        + unbalanced_renamings
+        + refine_candidate
+          + enqueue_func
 
