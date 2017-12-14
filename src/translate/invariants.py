@@ -411,6 +411,7 @@ class Invariant:
         ensure_inequality(system, add_effect.literal, del_effect.literal)
 
         still_unbalanced = []
+        # again, unbalanced_renamings is a list of a single object.
         for renaming in unbalanced_renamings:
             if check_constants:
                 new_sys = constant_test_system.combine(renaming)
