@@ -271,6 +271,7 @@ class Invariant:
         # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         # This mysterious comment is intended for the future update
 
+    # despite the name, this contains both too_heavy and unbalanced check
     def check_balance(self, balance_checker, enqueue_func):
         # Check balance for this hypothesis.
         actions_to_check = set()
