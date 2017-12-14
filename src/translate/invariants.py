@@ -352,8 +352,7 @@ class Invariant:
         # since assert(len(assigs) == 1), len(minimal_renamings) should be also 1
         return minimal_renamings
 
-    def add_effect_unbalanced(self, action, add_effect, del_effects,
-                              inv_vars, enqueue_func):
+    def add_effect_unbalanced(self, action, add_effect, del_effects, inv_vars, enqueue_func):
 
         minimal_renamings = self.minimal_covering_renamings(action, add_effect, inv_vars)
         # See minimal_covering_renamings. len(minimal_renamings) is 1
@@ -365,8 +364,7 @@ class Invariant:
             lhs_by_pred[lit.predicate].append(lit)
 
         for del_effect in del_effects:
-            minimal_renamings = self.unbalanced_renamings(del_effect, add_effect,
-                inv_vars, lhs_by_pred, minimal_renamings)
+            minimal_renamings = self.unbalanced_renamings(del_effect, add_effect, inv_vars, lhs_by_pred, minimal_renamings)
             if not minimal_renamings:
                 return False
 
@@ -384,8 +382,7 @@ class Invariant:
                                                    del_eff.literal):
                     enqueue_func(Invariant(self.parts.union((match,))))
 
-    def unbalanced_renamings(self, del_effect, add_effect,
-        inv_vars, lhs_by_pred, unbalanced_renamings):
+    def unbalanced_renamings(self, del_effect, add_effect, inv_vars, lhs_by_pred, unbalanced_renamings):
         """returns the renamings from unbalanced renamings for which
            the del_effect does not balance the add_effect."""
 
