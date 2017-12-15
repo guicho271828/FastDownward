@@ -387,6 +387,12 @@ class Invariant:
         """returns the renamings from unbalanced renamings for which
            the del_effect does not balance the add_effect."""
 
+        # unbalanced_renamings : again, this is a single constraint system
+        # lhs_by_pred : dict from predicate names to literals
+        # consisting of precond, effect cond and the negation of the effect atom
+        # This is used for ensure_conjunction_sat
+
+        # cover the delete effect
         system = constraints.ConstraintSystem()
         ensure_cover(system, del_effect.literal, self, inv_vars)
 
@@ -409,6 +415,7 @@ class Invariant:
         ensure_inequality(system, add_effect.literal, del_effect.literal)
 
         still_unbalanced = []
+
         # again, unbalanced_renamings is a list of a single object.
         for renaming in unbalanced_renamings:
             if check_constants:
