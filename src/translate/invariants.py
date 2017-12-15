@@ -395,6 +395,7 @@ class Invariant:
         # cover the delete effect
         system = constraints.ConstraintSystem()
         ensure_cover(system, del_effect.literal, self, inv_vars)
+        ensure_inequality(system, add_effect.literal, del_effect.literal)
 
         # Since we may only rename the quantified variables of the delete effect
         # we need to check that "renamings" of constants are already implied by
@@ -412,7 +413,6 @@ class Invariant:
                 neg_clause = constraints.NegativeClause([(a,b)])
                 constant_test_system.add_negative_clause(neg_clause)
 
-        ensure_inequality(system, add_effect.literal, del_effect.literal)
 
         still_unbalanced = []
 
