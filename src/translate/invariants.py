@@ -146,7 +146,7 @@ class InvariantPart:
 
     def get_assignment(self, parameters, literal):
         # parameters = (?v1 ?v2)
-        # invariant: (at ?v1 ?v2) (in ?v2 ?v1)
+        # invariant: (at ?v1 ?v2) (in ?v2 ?v1) --- counted var is v1 or v2 only?
         # literal    = (in truck ?thing)
         # returns an assignment constraint which impose
         # ?v1 = thing, ?v2 = ?truck
@@ -155,7 +155,7 @@ class InvariantPart:
         # thus
         # (arg, literal.args[argpos]) => ((?v1 . thing) (?v2 . ?truck))
         equalities = [(arg, literal.args[argpos])
-                      for arg, argpos in zip(parameters, self.order)]
+                      for arg, argpos in zip(parameters, self.order)] # order contains only non-counted var
         return constraints.Assignment(equalities)
 
     # returns forall parameters (↔ counted variables)
@@ -255,6 +255,7 @@ class Invariant:
         # A list of a single Assignment object.
         # For example, given
         # atom = (in truck ?thing)
+        # atom.predicate = in
         # self = ((∀ x) (∃! c) (xor (at ?x ?c) (in ?c ?x))) c: for "counted"
         # part = (in ?c ?x)
         # Intentionally swapped the argument order so that later in part.get_assignment, self.order makes sense
