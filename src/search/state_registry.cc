@@ -23,6 +23,7 @@ StateRegistry::~StateRegistry() {
     delete cached_initial_state;
 }
 
+// duplicate detection here!!
 StateID StateRegistry::insert_id_or_pop_state() {
     /*
       Attempt to insert a StateID for the last state of state_data_pool
@@ -31,7 +32,7 @@ StateID StateRegistry::insert_id_or_pop_state() {
       state data pool.
     */
     StateID id(state_data_pool.size() - 1);
-    pair<StateIDSet::iterator, bool> result = registered_states.insert(id);
+    pair<StateIDSet::iterator, bool> result = registered_states.insert(id); // duplicate checking! but is hash-based
     bool is_new_entry = result.second;
     if (!is_new_entry) {
         state_data_pool.pop_back();
@@ -67,15 +68,17 @@ const GlobalState &StateRegistry::get_initial_state() {
 //     operating on state buffers (PackedStateBin *).
 GlobalState StateRegistry::get_successor_state(const GlobalState &predecessor, const GlobalOperator &op) {
     assert(!op.is_axiom());
-    state_data_pool.push_back(predecessor.get_packed_buffer());
-    PackedStateBin *buffer = state_data_pool[state_data_pool.size() - 1];
-    for (size_t i = 0; i < op.get_effects().size(); ++i) {
+    state_data_pool.push_back(predecessor.get_packed_buffer());           // push a copy of the parent
+    PackedStateBin *buffer = state_data_pool[state_data_pool.size() - 1]; // retrieve the copy
+    for (size_t i = 0; i < op.get_effects().size(); ++i) {                // apply the effect
         const GlobalEffect &effect = op.get_effects()[i];
         if (effect.does_fire(predecessor))
             g_state_packer->set(buffer, effect.var, effect.val);
     }
-    g_axiom_evaluator->evaluate(buffer);
-    StateID id = insert_id_or_pop_state();
+    g_axiom_evaluator->evaluate(buffer);   // apply axiom
+    StateID id = insert_id_or_pop_state(); // duplicate detection, assuming the
+                                           // last state in state_data_pool is
+                                           // the current state
     return lookup_state(id);
 }
 
