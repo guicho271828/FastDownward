@@ -45,6 +45,7 @@ int main(int argc, const char **argv) {
     g_engine->print_statistics();
     cout << "Search time: " << search_timer << endl;
     cout << "Total time: " << Utils::g_timer << endl;
+    cout << " <INFO> [00:00:00] fastdownward (planner.cc) - [0.000s] [+0.000s] eval/sec: " << g_engine->get_statistics().get_evaluated_states() / search_timer() << endl;
 
     if (g_engine->found_solution()) {
         Utils::exit_with(ExitCode::PLAN_FOUND);
