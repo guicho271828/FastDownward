@@ -34,6 +34,8 @@ SearchEngine::SearchEngine(const Options &opts)
 }
 
 SearchEngine::~SearchEngine() {
+    print_statistics();
+    cout << " <INFO> [00:00:00] fastdownward (planner.cc) - [0.000s] [+0.000s] eval: " << statistics.get_evaluated_states() << endl;
 }
 
 void SearchEngine::print_statistics() const {
