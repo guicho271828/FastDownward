@@ -91,11 +91,11 @@ macro(fast_downward_set_linker_flags)
         endif()
     
         # Set linker flags to link statically.
-        if(CMAKE_COMPILER_IS_GNUCXX)
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -static -static-libgcc")
-        elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -static -static-libstdc++")
-        endif()
+        # if(CMAKE_COMPILER_IS_GNUCXX)
+        #     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -static -static-libgcc")
+        # elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+        #     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -static -static-libstdc++")
+        # endif()
     endif()
 endmacro()
 
